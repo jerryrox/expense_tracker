@@ -2,24 +2,6 @@ import 'package:expense_tracker/modules/models/navigations/RouteMatcher.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test("Instantiation with empty path", () {
-    expect(RouteMatcher(null).paths.length, equals(0));
-    expect(RouteMatcher("").paths.length, equals(0));
-    expect(RouteMatcher("/").paths.length, equals(0));
-  });
-  test("Instantiation with multiple paths", () {
-    expect(RouteMatcher("asdf").paths.length, equals(1));
-    expect(RouteMatcher("asdf").paths[0], equals("asdf"));
-
-    expect(RouteMatcher("a/b").paths.length, equals(2));
-    expect(RouteMatcher("a/b").paths[0], equals("a"));
-    expect(RouteMatcher("a/b").paths[1], equals("b"));
-
-    expect(RouteMatcher("a/:b").paths.length, equals(2));
-
-    expect(RouteMatcher("a/b a").paths[0], equals("a"));
-    expect(RouteMatcher("a/b a").paths[1], equals("b a"));
-  });
   test("Matching with non-exact and non-case-sensitive", () {
     var matcher = RouteMatcher(null, isExact: false, isCaseSensitive: false);
     expect(matcher.getMatch("").isMatching, isTrue);

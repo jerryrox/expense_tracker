@@ -1,56 +1,47 @@
-import 'package:expense_tracker/modules/models/PathParser.dart';
+import 'package:expense_tracker/modules/models/PathUtils.dart';
+import 'package:expense_tracker/modules/models/navigations/NavigationPath.dart';
 import 'package:expense_tracker/modules/models/navigations/RouteMatchInfo.dart';
 
 /// Class which compares the inputted path to see if it matches the condition for routing.
 class RouteMatcher {
 
-  List<String> paths;
+  NavigationPath path;
   bool isExact;
   bool isCaseSensitive;
 
   RouteMatcher(String path, {this.isExact = false, this.isCaseSensitive = false}) {
-    this.paths = PathParser.parse(path ?? "");
+    this.path = NavigationPath.withPath(path);
   }
 
   /// Returns the match information by evaluating the specified location.
   RouteMatchInfo getMatch(String location) {
-    final segments = PathParser.parse(location ?? "");
-    if(segments.length != paths.length) {
+    final segments = PathUtils.parseSegments(location ?? "");
+    if(segments.length != path.length) {
       return RouteMatchInfo.noMatch();
     }
     
     Map<String, String> params = {};
-    for(int i=0; i<paths.length; i++) {
-      final targetPath = paths[i];
-      final curPath = segments[i];
+    for(int i=0; i<path.length; i++) {
+      final targetSegment = path.getSegment(i);
+      final curSegment = segments[i];
 
       if(isExact) {
-        if(!_isMatchingPaths(targetPath, curPath)) {
+        if(!_isMatchingPaths(targetSegment.segment, curSegment)) {
           return RouteMatchInfo.noMatch();
         }
       }
       else {
-        if(_isParamPath(targetPath)) {
-          params[getParamName(targetPath)] = curPath;
+        if(targetSegment.isKey) {
+          params[targetSegment.key] = curSegment;
         }
         else {
-          if(!_isMatchingPaths(targetPath, curPath)) {
+          if(!_isMatchingPaths(targetSegment.segment, curSegment)) {
             return RouteMatchInfo.noMatch();
           }
         }
       }
     }
     return RouteMatchInfo.match(params);
-  }
-
-  /// Returns the name of the parameter key for the specified param path.
-  String getParamName(String path) {
-    return path.substring(1);
-  }
-
-  /// Returns whether the specified path represents a placeholder for the route parameter.
-  bool _isParamPath(String path) {
-    return path.startsWith(":");
   }
 
   /// Returns whether the two paths are considered matching.

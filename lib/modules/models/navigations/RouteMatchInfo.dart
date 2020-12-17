@@ -1,3 +1,5 @@
+import 'package:expense_tracker/modules/models/navigations/BaseRouteInfo.dart';
+
 /// Class which contains the information of route matcher evaluation result.
 class RouteMatchInfo {
 
