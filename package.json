@@ -1,0 +1,7 @@
+{
+    "scripts": {
+        "build-web": "flutter build web",
+        "deploy-production": "yarn build-web && firebase deploy --only hosting:prod-env",
+        "deploy-dev": "yarn build-web && firebase deploy --only hosting:dev-env"
+    }
+}

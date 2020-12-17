@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "expense-tracker-d6842"
+  },
+  "targets": {
+    "expense-tracker-d6842": {
+      "hosting": {
+        "dev-env": [
+          "expense-tracker-dev"
+        ],
+        "prod-env": [
+          "expense-tracker-d6842"
+        ]
+      }
+    }
   }
 }
