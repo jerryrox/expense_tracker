@@ -28,7 +28,9 @@ class _SplashScreenState extends State<SplashScreen> with UtilMixin {
   /// Waits for a certain delay before navigating to the next screen.
   Future waitSplash() async {
     await Future.delayed(Duration(milliseconds: 500));
-    screenManager.toHome(context);
+
+    // TODO: Check whether user is logged in.
+    screenManager.toWelcome(context);
   }
 
   @override
