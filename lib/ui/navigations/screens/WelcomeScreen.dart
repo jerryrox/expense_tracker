@@ -1,7 +1,12 @@
+import 'package:expense_tracker/modules/dependencies/ScreenManager.dart';
+import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
+import 'package:expense_tracker/modules/tasks/LoginTask.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   WelcomeScreen({Key key}) : super(key: key);
@@ -10,11 +15,30 @@ class WelcomeScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin {
+  UserState get userState => Provider.of<UserState>(context, listen: false);
+  ScreenManager get screenManager => Provider.of<ScreenManager>(context, listen: false);
+
+  /// Starts logging in anonymously.
+  Future loginAnonymous() async {
+    try {
+      final loginTask = LoginTask.anonymous();
+      final user = await loginTask.run();
+      if(user == null) {
+        throw "Failed to request anonymous login.";
+      }
+
+      userState.user.value = user;
+      screenManager.toHome(context);
+    }
+    catch(e) {
+      showSnackbar(context, e.toString());
+    }
+  }
+
   /// Event called on clicking the get started button.
   void onGetStartedButton() {
-    // TODO: Login
-    // TODO: Navigate to HomeScreen.
+    loginAnonymous();
   }
 
   @override
