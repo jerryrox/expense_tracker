@@ -1,9 +1,12 @@
-import 'package:expense_tracker/modules/dependencies/ScreenManager.dart';
+import 'package:expense_tracker/modules/dependencies/DependencyContainer.dart';
 import 'package:expense_tracker/ui/UIRoot.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(ExpenseTrackerApp());
 }
 
@@ -17,21 +20,19 @@ class ExpenseTrackerApp extends StatefulWidget {
 
 class _ExpenseTrackerAppState extends State<ExpenseTrackerApp> {
 
-  ScreenManager screenManager;
+  DependencyContainer dependencies;
 
   @override
   void initState() {
     super.initState();
 
-    screenManager = ScreenManager();
+    dependencies = DependencyContainer();
   }
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        Provider.value(value: screenManager),
-      ],
+      providers: dependencies.getProviders(),
       child: UIRoot(),
     );
   }
