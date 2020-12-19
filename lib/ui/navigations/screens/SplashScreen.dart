@@ -1,5 +1,7 @@
 import 'package:expense_tracker/modules/dependencies/ScreenManager.dart';
+import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
+import 'package:expense_tracker/modules/tasks/LoginTask.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> with UtilMixin {
 
+  UserState get userState => Provider.of<UserState>(context, listen: false);
   ScreenManager get screenManager => Provider.of<ScreenManager>(context, listen: false);
 
   @override
@@ -21,16 +24,38 @@ class _SplashScreenState extends State<SplashScreen> with UtilMixin {
     super.initState();
 
     afterFrameRender(() {
-      waitSplash();
+      performLoading();
     });
   }
 
   /// Waits for a certain delay before navigating to the next screen.
-  Future waitSplash() async {
-    await Future.delayed(Duration(milliseconds: 500));
+  Future performLoading() async {
+    await Future.delayed(Duration(milliseconds: 250));
 
-    // TODO: Check whether user is logged in.
-    screenManager.toWelcome(context);
+    // Check login state
+    bool didLogin = await autoLogin();
+
+    // Navigate to next screen.
+    if(didLogin) {
+      screenManager.toHome(context);
+    }
+    else {
+      screenManager.toWelcome(context);
+    }
+  }
+
+  /// Attempts to auto login and returns whether it was successful.
+  Future<bool> autoLogin() async {
+    try {
+      final autoLoginTask = LoginTask.auto();
+      final user = await autoLoginTask.run();
+
+      userState.user.value = user;
+      return user != null;
+    }
+    catch(e) {
+      return false;
+    }
   }
 
   @override
