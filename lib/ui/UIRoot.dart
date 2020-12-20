@@ -17,6 +17,11 @@ class _UIRootState extends State<UIRoot> {
       title: "Expense Tracker",
       theme: ThemeData(
         primarySwatch: Colors.green,
+        primaryTextTheme: TextTheme(
+          button: TextStyle(
+            color: Colors.white,
+          ),
+        ),
       ),
       home: SplashScreen(),
     );
