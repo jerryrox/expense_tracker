@@ -1,4 +1,6 @@
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
+import 'package:expense_tracker/modules/types/DateRangeType.dart';
+import 'package:expense_tracker/ui/components/primitives/ButtonGroup.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
@@ -13,6 +15,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DateRangeType dateRangeType = DateRangeType.day;
+
+  /// Sets the specified date range for data displayal.
+  void setDateRange(DateRangeType type) {
+    setState(() => dateRangeType = type);
+  }
+
   /// Shows the record page to start recording a new item.
   void showRecordPage() {
     // TODO:
@@ -32,6 +41,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       TitleText("Overview"),
+                      ButtonGroup(
+                        [
+                          "Day",
+                          "Week",
+                          "Month",
+                          "Year",
+                        ],
+                        selectedIndex: dateRangeType.index,
+                        onSelection: _onDateTypeSelection,
+                      ),
                     ],
                   ),
                 ),
@@ -48,13 +67,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        IconAtlas.record,
-                      ),
+                      Icon(IconAtlas.record),
                       SizedBox(width: 8),
-                      Text(
-                        "Record new",
-                      ),
+                      Text("Record new"),
                     ],
                   ),
                 ),
@@ -65,6 +80,11 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  /// Event called on selecting a date range type.
+  void _onDateTypeSelection(int index) {
+    setDateRange(DateRangeType.values[index]);
   }
 
   /// Event called on record new button.
