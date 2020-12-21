@@ -5,6 +5,7 @@ import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
+import 'package:expense_tracker/ui/components/screens/home/TotalSpentDisplay.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -50,6 +51,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                         selectedIndex: dateRangeType.index,
                         onSelection: _onDateTypeSelection,
+                      ),
+                      SizedBox(height: 20),
+                      TotalSpentDisplay(
+                        dateRangeType: dateRangeType,
+                        // TODO: Use real amount
+                        amount: 0,
                       ),
                     ],
                   ),

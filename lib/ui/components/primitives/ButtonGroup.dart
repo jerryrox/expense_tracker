@@ -21,8 +21,28 @@ class ButtonGroup extends StatelessWidget {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: theme.primaryColor,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: _drawSelectionButtons(context),
+      ),
+    );
+  }
+
   /// Draws the selection buttons for the button group.
-  List<Widget> drawSelectionButtons(BuildContext context) {
+  List<Widget> _drawSelectionButtons(BuildContext context) {
     final theme = Theme.of(context);
     List<Widget> buttons = [];
     for (int i = 0; i < selections.length; i++) {
@@ -60,25 +80,5 @@ class ButtonGroup extends StatelessWidget {
       ));
     }
     return buttons;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: theme.primaryColor,
-          width: 1,
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: drawSelectionButtons(context),
-      ),
-    );
   }
 }
