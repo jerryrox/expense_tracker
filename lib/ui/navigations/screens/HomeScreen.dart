@@ -37,6 +37,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Returns the data for the chart to display.
   List<PieChartSectionData> getChartData(double maxWidth) {
+    // TODO: Use actual data.
+
     List<RecordGroup> records = [
       RecordGroup(
         category: Category(id: "a", name: "Food", color: 0xffff8888),
@@ -68,13 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     }).toList();
-    // return charts.Series<RecordGroup, String>(
-    //   id: "a",
-    //   domainFn: (data, _) => data.category.name,
-    //   measureFn: (data, _) => data.totalAmount,
-    //   data: [
-    //   ],
-    // );
   }
 
   @override
