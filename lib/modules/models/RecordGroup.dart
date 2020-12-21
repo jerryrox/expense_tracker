@@ -16,7 +16,7 @@ class RecordGroup {
 
   /// Returns the total price of all the records included.
   double get totalAmount {
-    double amount;
+    double amount = 0;
     for(final record in records) {
       amount += record.price;
     }
@@ -25,6 +25,6 @@ class RecordGroup {
 
   RecordGroup({
     this.category,
-    this.records,
+    this.records = const [],
   });
 }

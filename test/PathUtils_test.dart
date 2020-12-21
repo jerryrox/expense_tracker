@@ -1,4 +1,4 @@
-import 'package:expense_tracker/modules/models/PathUtils.dart';
+import 'package:expense_tracker/modules/models/static/PathUtils.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
