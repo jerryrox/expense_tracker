@@ -43,6 +43,7 @@ class ExpenseChart extends StatelessWidget {
               showChartValuesOutside: false,
               decimalPlaces: 2,
             ),
+            formatChartValues: (double value) => "\$${value.toStringAsFixed(2)}",
           ),
         );
       },
