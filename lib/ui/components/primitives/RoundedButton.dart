@@ -10,7 +10,7 @@ class RoundedButton extends StatelessWidget {
     Key key,
     this.child,
     this.isOutlined = false,
-    this.isFullWidth = true,
+    this.isFullWidth = false,
     this.onClick,
   }) : super(key: key);
 

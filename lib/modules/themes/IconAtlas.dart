@@ -6,6 +6,7 @@ class IconAtlas {
   static final app = Icons.attach_money;
 
   static final warning = Icons.warning;
+  static final record = Icons.create;
 
   IconAtlas._();
 }
