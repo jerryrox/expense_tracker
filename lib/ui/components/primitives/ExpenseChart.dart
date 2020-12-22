@@ -1,13 +1,26 @@
-import 'package:fl_chart/fl_chart.dart';
+import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:flutter/material.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class ExpenseChart extends StatelessWidget {
-  final List<PieChartSectionData> Function(double) dataFunction;
-  
+  final List<ExpenseChartData> data;
+
   ExpenseChart({
     Key key,
-    this.dataFunction,
+    this.data,
   }) : super(key: key);
+
+  List<Color> getColors() {
+    return data.map((e) => e.color).toList();
+  }
+
+  Map<String, double> getDataMap() {
+    Map<String, double> map = {};
+    for(final d in data) {
+      map[d.label] = d.value;
+    }
+    return map;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +29,19 @@ class ExpenseChart extends StatelessWidget {
         return AspectRatio(
           aspectRatio: 1,
           child: PieChart(
-            PieChartData(
-              borderData: FlBorderData(
-                show: false,
-              ),
-              centerSpaceRadius: 0,
-              sections: dataFunction(constraints.maxWidth),
+            dataMap: getDataMap(),
+            chartRadius: constraints.maxWidth / 2,
+            colorList: getColors(),
+            chartType: ChartType.disc,
+            legendOptions: LegendOptions(
+              showLegends: true,
+            ),
+            chartValuesOptions: ChartValuesOptions(
+              showChartValueBackground: false,
+              showChartValues: true,
+              showChartValuesInPercentage: false,
+              showChartValuesOutside: false,
+              decimalPlaces: 2,
             ),
           ),
         );

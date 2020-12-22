@@ -1,4 +1,5 @@
 import 'package:expense_tracker/modules/models/Category.dart';
+import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordContext.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
@@ -12,7 +13,6 @@ import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/components/screens/home/TotalSpentDisplay.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   /// Returns the data for the chart to display.
-  List<PieChartSectionData> getChartData(double maxWidth) {
+  List<ExpenseChartData> getChartData() {
     // TODO: Use actual data.
 
     List<RecordGroup> records = [
@@ -59,15 +59,10 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     return records.map((e) {
       Color color = Color(e.category.color);
-      return PieChartSectionData(
+      return ExpenseChartData(
         color: color,
-        value: e.totalAmount,
-        radius: maxWidth / 2,
-        title: "${e.category.name}\n\$${e.totalAmount.toStringAsFixed(2)}",
-        titleStyle: TextStyle(
-          color: ColorUtils.getTextColorForBg(color),
-          fontSize: 15,
-        ),
+        label: e.category.name,
+        value: e.totalAmount
       );
     }).toList();
   }
@@ -76,12 +71,12 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FilledBox(
-        child: ContentPadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: ContentPadding(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -102,19 +97,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         // TODO: Use real amount
                         amount: 0,
                       ),
-                      SizedBox(height: 40),
+                      SizedBox(height: 30),
                       ConstrainedBox(
                         constraints: BoxConstraints(maxWidth: 300),
                         child: ExpenseChart(
-                          dataFunction: getChartData,
+                          data: getChartData(),
                         ),
                       ),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-              ConstrainedBox(
+            ),
+            SizedBox(height: 20),
+            ContentPadding(
+              child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: 300,
                 ),
@@ -132,9 +129,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
-            ],
-          ),
+            ),
+            SizedBox(height: 20),
+          ],
         ),
       ),
     );
