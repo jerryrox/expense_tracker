@@ -15,6 +15,12 @@ class ScreenManager {
     _showGeneric(context, (context) => HomeScreen());
   }
 
+  /// Shows the detail screen.
+  toDetail(BuildContext context) {
+    // TODO:
+    // _showGeneric(context, (context) => HomeScreen());
+  }
+
   /// Shows the next screen with generic behavior using the specified builder.
   _showGeneric(BuildContext context, WidgetBuilder builder) {
     Navigator.of(context).pushAndRemoveUntil(

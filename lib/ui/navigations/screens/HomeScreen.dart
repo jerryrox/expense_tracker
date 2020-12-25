@@ -4,10 +4,12 @@ import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
+import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
 import 'package:expense_tracker/ui/components/primitives/ButtonGroup.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
+import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/components/screens/home/CategoryListDisplay.dart';
@@ -73,6 +75,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: NavMenuBar(
+        curScreenType: NavMenuScreenType.home,
+      ),
       body: FilledBox(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
