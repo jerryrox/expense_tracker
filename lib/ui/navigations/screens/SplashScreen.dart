@@ -1,7 +1,7 @@
+import 'package:expense_tracker/modules/api/login/AutoLoginApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
-import 'package:expense_tracker/modules/tasks/LoginTask.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +47,7 @@ class _SplashScreenState extends State<SplashScreen> with UtilMixin {
   /// Attempts to auto login and returns whether it was successful.
   Future<bool> autoLogin() async {
     try {
-      final autoLoginTask = LoginTask.auto();
-      final user = await autoLoginTask.run();
+      final user = await AutoLoginApi().request();
 
       userState.user.value = user;
       return user != null;
