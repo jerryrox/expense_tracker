@@ -1,3 +1,4 @@
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
@@ -5,6 +6,7 @@ import 'package:expense_tracker/modules/models/RecordGroup.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
+import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ButtonGroup.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
@@ -15,6 +17,7 @@ import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/components/screens/home/CategoryListDisplay.dart';
 import 'package:expense_tracker/ui/components/screens/home/TotalSpentDisplay.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -26,6 +29,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   DateRangeType dateRangeType = DateRangeType.day;
 
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
+
   /// Sets the specified date range for data displayal.
   void setDateRange(DateRangeType type) {
     setState(() => dateRangeType = type);
@@ -33,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Shows the record page to start recording a new item.
   void showRecordPage() {
-    // TODO: Navigate to RecordPage.
+    appNavigation.toRecordCategoryPage(context);
   }
 
   /// Shows the detail screen using the specified record group.
@@ -74,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       bottomNavigationBar: NavMenuBar(
         curScreenType: NavMenuScreenType.home,
@@ -125,28 +131,28 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            ContentPadding(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: 300,
-                ),
-                child: RoundedButton(
-                  isFullWidth: true,
-                  onClick: _onRecordButton,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(IconAtlas.record),
-                      SizedBox(width: 8),
-                      Text("Record new"),
-                    ],
+            BottomContentPadding(
+              child: ContentPadding(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 300,
+                  ),
+                  child: RoundedButton(
+                    isFullWidth: true,
+                    onClick: _onRecordButton,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(IconAtlas.record, color: theme.scaffoldBackgroundColor),
+                        SizedBox(width: 8),
+                        Text("Record new", style: TextStyle(color: theme.scaffoldBackgroundColor)),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-            SizedBox(height: 20),
           ],
         ),
       ),

@@ -1,4 +1,4 @@
-import 'package:expense_tracker/modules/dependencies/ScreenManager.dart';
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/tasks/LoginTask.dart';
@@ -17,7 +17,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> with UtilMixin {
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
-  ScreenManager get screenManager => Provider.of<ScreenManager>(context, listen: false);
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
   @override
   void initState() {
@@ -37,10 +37,10 @@ class _SplashScreenState extends State<SplashScreen> with UtilMixin {
 
     // Navigate to next screen.
     if(didLogin) {
-      screenManager.toHome(context);
+      appNavigation.toHomeScreen(context);
     }
     else {
-      screenManager.toWelcome(context);
+      appNavigation.toWelcomeScreen(context);
     }
   }
 
