@@ -1,4 +1,5 @@
 class Record {
+  String id;
   String itemId;
   List<String> tagIds;
   int quantity;
@@ -16,6 +17,7 @@ class Record {
   double get price => (isQuantityBased ? quantity.toDouble() : mass) * unitPrice;
 
   Record({
+    this.id = "",
     this.itemId = "",
     this.tagIds = const [],
     this.quantity = 0,
