@@ -14,7 +14,6 @@ class RecordGroupMaker {
       if (category == null) {
         continue;
       }
-
       final recordsforItem = records.where((element) => element.itemId == item.id).toList();
       if (trimEmpty && recordsforItem.isEmpty) {
         continue;

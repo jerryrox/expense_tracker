@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
   /// Sets the specified date range for data displayal.
   void setDateRange(DateRangeType type) {
     setState(() => dateRangeType = type);
+    loadData();
   }
 
   /// Shows the record page to start recording a new item.

@@ -17,21 +17,21 @@ class CollectionNames {
 
   /// Returns the path of a collection or document for a user's category.
   static String getCategoryPath(String uid, {String id}) {
-    return PathUtils.combineSegments([getUserPath(uid: uid), categories, id]);
+    return PathUtils.combineSegments([getUserPath(uid: uid), categories, id], leadSlash: false);
   }
 
   /// Returns the path of a collection or document for a user's tag.
   static String getTagPath(String uid, {String id}) {
-    return PathUtils.combineSegments([getUserPath(uid: uid), tags, id]);
+    return PathUtils.combineSegments([getUserPath(uid: uid), tags, id], leadSlash: false);
   }
 
   /// Returns the path of a collection or document for a user's item.
   static String getItemPath(String uid, {String id}) {
-    return PathUtils.combineSegments([getUserPath(uid: uid), items, id]);
+    return PathUtils.combineSegments([getUserPath(uid: uid), items, id], leadSlash: false);
   }
 
   /// Returns the path of a collection or document for a user's record.
   static String getRecordPath(String uid, {String id}) {
-    return PathUtils.combineSegments([getUserPath(uid: uid), records, id]);
+    return PathUtils.combineSegments([getUserPath(uid: uid), records, id], leadSlash: false);
   }
 }

@@ -5,6 +5,9 @@ import 'package:pie_chart/pie_chart.dart';
 class ExpenseChart extends StatelessWidget {
   final List<ExpenseChartData> data;
 
+  /// Returns whether the chart data is not empty.
+  bool get hasData => data != null && data.isNotEmpty;
+
   ExpenseChart({
     Key key,
     this.data,
@@ -28,25 +31,38 @@ class ExpenseChart extends StatelessWidget {
       builder: (context, constraints) {
         return AspectRatio(
           aspectRatio: 1,
-          child: PieChart(
-            dataMap: getDataMap(),
-            chartRadius: constraints.maxWidth / 2,
-            colorList: getColors(),
-            chartType: ChartType.disc,
-            legendOptions: LegendOptions(
-              showLegends: true,
-            ),
-            chartValuesOptions: ChartValuesOptions(
-              showChartValueBackground: false,
-              showChartValues: true,
-              showChartValuesInPercentage: false,
-              showChartValuesOutside: false,
-              decimalPlaces: 2,
-            ),
-            formatChartValues: (double value) => "\$${value.toStringAsFixed(2)}",
-          ),
+          child: _drawChartContent(constraints),
         );
       },
+    );
+  }
+
+  /// Draws the inner content of the chart container.
+  Widget _drawChartContent(BoxConstraints constraints) {
+    if(hasData) {
+      return PieChart(
+        dataMap: getDataMap(),
+        chartRadius: constraints.maxWidth / 2,
+        colorList: getColors(),
+        chartType: ChartType.disc,
+        legendOptions: LegendOptions(
+          showLegends: true,
+        ),
+        chartValuesOptions: ChartValuesOptions(
+          showChartValueBackground: false,
+          showChartValues: true,
+          showChartValuesInPercentage: false,
+          showChartValuesOutside: false,
+          decimalPlaces: 2,
+        ),
+        formatChartValues: (double value) => "\$${value.toStringAsFixed(2)}",
+      );
+    }
+
+    return Center(
+      child: Text(
+        "There are no expense data for this date range."
+      ),
     );
   }
 }
