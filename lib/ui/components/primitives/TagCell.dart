@@ -20,6 +20,7 @@ class TagCell extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(100),
+      onTap: onClick,
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
@@ -28,7 +29,7 @@ class TagCell extends StatelessWidget {
             width: 2,
           ),
         ),
-        padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+        padding: EdgeInsets.symmetric(vertical: 2, horizontal: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,

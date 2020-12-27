@@ -6,7 +6,6 @@ import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
-import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/CategoryCell.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
@@ -44,8 +43,10 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     try {
       final categories = await GetCategoriesApi(userState.user.value.uid).request();
       setState(() => this.categories = categories);
+      filterCategories();
     } catch (e) {
       showSnackbar(context, e.toString());
+      Navigator.of(context).pop();
     }
   }
 
@@ -56,9 +57,8 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
         context,
         CategoryCreatePopup(initialName: searchValue.trim()),
       );
-
       if(category != null) {
-        categories.add(category);
+        setState(() => categories.add(category));
         filterCategories();
       }
     } catch (e) {
@@ -114,6 +114,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
               TextField(
                 onChanged: _onSearchValueChange,
               ),
+              SizedBox(height: 10),
               TextRoundedButton(
                 "Create a new category",
                 isFullWidth: true,

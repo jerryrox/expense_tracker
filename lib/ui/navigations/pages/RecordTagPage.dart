@@ -2,6 +2,7 @@ import 'package:expense_tracker/modules/api/createTag/CreateTagApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
+import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
@@ -25,7 +26,7 @@ class RecordTagPage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordTagPageState();
 }
 
-class _RecordTagPageState extends State<RecordTagPage> with SnackbarMixin {
+class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarMixin {
   List<Tag> tags = [];
   List<Tag> filteredTags = [];
   List<Tag> selectedTags = [];
@@ -44,6 +45,10 @@ class _RecordTagPageState extends State<RecordTagPage> with SnackbarMixin {
   @override
   void initState() {
     super.initState();
+
+    afterFrameRender(() {
+      loadTags();
+    });
   }
 
   /// Loads the list of tags included for the current category.
@@ -134,20 +139,22 @@ class _RecordTagPageState extends State<RecordTagPage> with SnackbarMixin {
             children: [
               SizedBox(height: 10),
               Text(
-                "Search for the category you want, or create a new one.",
+                "Search for the tag you want, or create a new one.",
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 10),
               TextField(
                 onChanged: _onSearchValueChanged,
               ),
+              SizedBox(height: 10),
               TextRoundedButton(
-                "Create tag ($searchValue)",
+                searchValue.isEmpty ? "Create tag" : "Create tag ($searchValue)",
                 onClick: _onCreateTagButton,
               ),
               SizedBox(height: 10),
               Expanded(
                 child: Wrap(
+                  spacing: 4,
                   children: filteredTags.map((e) {
                     return TagCell(
                       tag: e,
@@ -163,7 +170,7 @@ class _RecordTagPageState extends State<RecordTagPage> with SnackbarMixin {
                     maxWidth: 300,
                   ),
                   child: TextRoundedButton(
-                    filteredTags.isEmpty ? "Skip" : "Next",
+                    selectedTags.isEmpty ? "Skip" : "Next",
                     isFullWidth: true,
                     onClick: _onNextButton,
                   ),
