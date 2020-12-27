@@ -1,5 +1,6 @@
 import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
@@ -8,6 +9,7 @@ import 'package:expense_tracker/ui/components/primitives/CategoryCell.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
+import 'package:expense_tracker/ui/navigations/popups/CategoryCreatePopup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,7 @@ class RecordCategoryPage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordCategoryPageState();
 }
 
-class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin, SnackbarMixin {
+class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin, SnackbarMixin, DialogMixin {
   List<Category> categories = [];
   List<Category> filteredCategories = [];
   String searchValue = "";
@@ -47,10 +49,15 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
   /// Starts a new category creation process for the user.
   Future createCategory() async {
     try {
-      // TODO: Show the category creation popup while passing the searchValue as the initial name.
-      // TODO: If returned category is non-null, add that to the categories list.
+      final category = await showDialogDefault<Category>(
+        context,
+        CategoryCreatePopup(initialName: searchValue.trim()),
+      );
 
-      filterCategories();
+      if(category != null) {
+        categories.add(category);
+        filterCategories();
+      }
     } catch (e) {
       showSnackbar(context, e.toString());
     }
