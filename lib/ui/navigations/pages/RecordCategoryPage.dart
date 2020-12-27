@@ -56,6 +56,12 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     }
   }
 
+  /// Sets the current search value.
+  void setSearchValue(String value) {
+    setState(() => this.searchValue = value);
+    filterCategories();
+  }
+
   /// Filteres the categories list so it reflects the search value.
   void filterCategories() {
     List<Category> newCategories = [];
@@ -126,7 +132,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Event called when the search text field value was changed.
   void _onSearchValueChange(String value) {
-    searchValue = value;
+    setSearchValue(value);
   }
 
   /// Event called when the category create button was pressed.
