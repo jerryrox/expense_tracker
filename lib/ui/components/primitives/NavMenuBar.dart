@@ -21,7 +21,11 @@ class _NavMenuBarState extends State<NavMenuBar> {
 
   /// Navigates to the screen of specified index.
   void navigateToScreen(int index) {
-    switch (NavMenuScreenType.values[index]) {
+    final selectedType = NavMenuScreenType.values[index];
+    if(selectedType == widget.curScreenType) {
+      return;
+    }
+    switch (selectedType) {
       case NavMenuScreenType.home:
         appNavigation.toHomeScreen(context);
         break;
