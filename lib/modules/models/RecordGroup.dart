@@ -6,13 +6,10 @@ class RecordGroup {
 
   Category category;
   Item item;
-  List<Record> records;
+  List<Record> records = [];
 
-  /// Returns whether the records have been grouped with the same category.
-  bool get isCategoryGroup => category != null;
-
-  /// Returns whether the records have been grouped with the same item.
-  bool get isItemGroup => item != null;
+  /// Returns whether there are any records in this group.
+  bool get hasRecords => records.isNotEmpty;
 
   /// Returns the total price of all the records included.
   double get totalAmount {
@@ -23,8 +20,10 @@ class RecordGroup {
     return amount;
   }
 
-  RecordGroup({
+
+  RecordGroup(
     this.category,
-    this.records = const [],
-  });
+    this.item,
+    this.records,
+  );
 }

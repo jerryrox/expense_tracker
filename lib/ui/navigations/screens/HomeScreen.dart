@@ -1,8 +1,17 @@
+import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart';
+import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
+import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
+import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
+import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
+import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
+import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
+import 'package:expense_tracker/modules/models/static/RecordGroupMaker.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
@@ -26,10 +35,43 @@ class HomeScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
   DateRangeType dateRangeType = DateRangeType.day;
+  List<Category> categories = [];
+  List<Item> items = [];
+  List<Record> records = [];
 
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
+  UserState get userState => Provider.of<UserState>(context, listen: false);
+
+  /// Returns the uid of the current online user.
+  String get uid => userState.user.value.uid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    afterFrameRender(() {
+      loadData();
+    });
+  }
+
+  /// Loads all data necessary to display the record data.
+  Future loadData() async {
+    try {
+      final categories = await _retrieveCategories();
+      final items = await _retrieveItems();
+      final records = await _retrieveRecords();
+      setState(() {
+        this.categories = categories;
+        this.items = items;
+        this.records = records;
+      });
+    }
+    catch(e) {
+      showSnackbar(context, e.toString());
+    }
+  }
 
   /// Sets the specified date range for data displayal.
   void setDateRange(DateRangeType type) {
@@ -48,25 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   /// Returns the list of record groups evaluated from current state.
   List<RecordGroup> getRecordGroups() {
-    // TODO: Use actual data.
-    return [
-      RecordGroup(
-        category: Category(id: "a", name: "Food", color: 0xffff8888),
-        records: [
-          Record(itemId: "a", quantity: 1, unitPrice: 5),
-          Record(itemId: "a", quantity: 2, unitPrice: 4),
-          Record(itemId: "a", mass: 1.5, unitPrice: 4),
-        ],
-      ),
-      RecordGroup(
-        category: Category(id: "a", name: "Game", color: 0xff88ff88),
-        records: [
-          Record(itemId: "a", quantity: 1, unitPrice: 4.99),
-          Record(itemId: "a", quantity: 2, unitPrice: 6.99),
-          Record(itemId: "a", quantity: 1, unitPrice: 3.5),
-        ],
-      )
-    ];
+    return RecordGroupMaker.make(categories, items, records);
   }
 
   /// Returns the data for the chart to display.
@@ -157,6 +181,22 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  /// Returns a future which loads all categories in the db.
+  Future<List<Category>> _retrieveCategories() {
+    return GetCategoriesApi(uid).request();
+  }
+
+  /// Returns a future which loads all items in the db.
+  Future<List<Item>> _retrieveItems() {
+    return GetItemsApi(uid).request();
+  }
+
+  /// Returns a future which loads all records matching the current state from the db.
+  Future<List<Record>> _retrieveRecords() {
+    final range = DateRange(DateTime.now(), dateRangeType);
+    return GetRecordsApi(uid).afterDate(range.min).beforeDate(range.max).request();
   }
 
   /// Event called on selecting a date range type.

@@ -1,3 +1,5 @@
+import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart';
+import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
@@ -5,9 +7,9 @@ import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.da
 import 'package:expense_tracker/ui/components/primitives/CategoryCell.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
-import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecordCategoryPage extends StatefulWidget {
   RecordCategoryPage({Key key}) : super(key: key);
@@ -21,6 +23,8 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
   List<Category> filteredCategories = [];
   String searchValue = "";
 
+  UserState get userState => Provider.of<UserState>(context, listen: false);
+
   @override
   void initState() {
     super.initState();
@@ -33,7 +37,8 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
   /// Loads the list of categories recorded by this user.
   Future loadCategories() async {
     try {
-      // TODO: Load categories using task.
+      final categories = await GetCategoriesApi(userState.user.value.uid).request();
+      setState(() => this.categories = categories);
     } catch (e) {
       showSnackbar(context, e.toString());
     }
@@ -67,7 +72,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
   }
 
   /// Navigates to the tags selection page.
-  void navigateToTags() {
+  void navigateToTags(Category category) {
     // TODO:
   }
 
@@ -131,6 +136,6 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Event called when one of the category cells was pressed.
   void _onCategoryButton(Category category) {
-    // TODO: Navigate to tag selection page.
+    navigateToTags(category);
   }
 }
