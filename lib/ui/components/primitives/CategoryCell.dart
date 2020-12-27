@@ -21,16 +21,7 @@ class CategoryCell extends StatelessWidget {
       child: InkWell(
         onTap: onClick,
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          height: 40,
-          decoration: BoxDecoration(
-            border: Border(
-              bottom: BorderSide(
-                color: theme.dividerColor,
-                width: 1,
-              ),
-            ),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [

@@ -1,5 +1,6 @@
 import 'package:expense_tracker/modules/api/createTag/CreateTagApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
@@ -34,6 +35,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
   String searchValue = "";
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
   /// Returns the uid of the current user.
   String get uid => userState.user.value.uid;
@@ -85,7 +87,10 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Navigates to the item selection page.
   void navigateToItems() {
-    // TODO:
+    appNavigation.toRecordItemPage(context, NewRecordFormData(
+      category: widget.formData.category,
+      tags: [...selectedTags],
+    ));
   }
 
   /// Sets the current search input value.
