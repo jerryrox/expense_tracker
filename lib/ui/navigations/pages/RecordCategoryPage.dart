@@ -1,9 +1,11 @@
 import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart';
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
+import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/CategoryCell.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
@@ -26,6 +28,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
   String searchValue = "";
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
   @override
   void initState() {
@@ -71,22 +74,24 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Filteres the categories list so it reflects the search value.
   void filterCategories() {
-    List<Category> newCategories = [];
+    List<Category> filtered = [];
     if (searchValue.isEmpty) {
-      newCategories.addAll(categories);
+      filtered.addAll(categories);
     } else {
-      for (Category category in categories) {
-        if (category.name.toLowerCase().contains(searchValue)) {
-          filteredCategories.add(category);
-        }
-      }
+      filtered.addAll(
+        categories.where((element) => element.name.toLowerCase().contains(searchValue.toLowerCase()))
+      );
     }
-    setState(() => filteredCategories = newCategories);
+    _sortCategories(filtered);
+
+    setState(() => filteredCategories = filtered);
   }
 
   /// Navigates to the tags selection page.
   void navigateToTags(Category category) {
-    // TODO:
+    appNavigation.toRecordTagPage(context, NewRecordFormData(
+      category: category,
+    ));
   }
 
   @override
@@ -109,6 +114,11 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
               TextField(
                 onChanged: _onSearchValueChange,
               ),
+              TextRoundedButton(
+                "Create a new category",
+                isFullWidth: true,
+                onClick: _onCreateButton,
+              ),
               SizedBox(height: 10),
               Expanded(
                 child: ListView.separated(
@@ -120,21 +130,16 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
                   itemCount: categories.length,
                 ),
               ),
-              BottomContentPadding(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: 300),
-                  child: TextRoundedButton(
-                    "Create a new category",
-                    isFullWidth: true,
-                    onClick: _onCreateButton,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  /// Sorts the specified categories list.
+  void _sortCategories(List<Category> categories) {
+    categories.sort((x, y) => x.name.toLowerCase().compareTo(y.name.toLowerCase()));
   }
 
   /// Event called when the search text field value was changed.
