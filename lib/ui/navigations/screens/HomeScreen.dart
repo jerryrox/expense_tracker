@@ -37,9 +37,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
   DateRangeType dateRangeType = DateRangeType.day;
-  List<Category> categories = [];
-  List<Item> items = [];
-  List<Record> records = [];
+  List<RecordGroup> recordGroups = [];
 
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
@@ -63,9 +61,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
       final items = await _retrieveItems();
       final records = await _retrieveRecords();
       setState(() {
-        this.categories = categories;
-        this.items = items;
-        this.records = records;
+        this.recordGroups = RecordGroupMaker.make(categories, items, records);
       });
     }
     catch(e) {
@@ -88,14 +84,18 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
     // TODO: Navigate to DetailScreen. Pass the category and date range type.
   }
 
-  /// Returns the list of record groups evaluated from current state.
-  List<RecordGroup> getRecordGroups() {
-    return RecordGroupMaker.make(categories, items, records);
+  /// Returns the total amount of money used.
+  double getTotalUsage() {
+    double usage = 0;
+    for(final group in recordGroups) {
+      usage += group.totalAmount;
+    }
+    return usage;
   }
 
   /// Returns the data for the chart to display.
   List<ExpenseChartData> getChartData() {
-    return getRecordGroups().map((e) {
+    return recordGroups.map((e) {
       Color color = Color(e.category.color);
       return ExpenseChartData(color: color, label: e.category.name, value: e.totalAmount);
     }).toList();
@@ -132,8 +132,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
                       SizedBox(height: 20),
                       TotalSpentDisplay(
                         dateRangeType: dateRangeType,
-                        // TODO: Use real amount
-                        amount: 0,
+                        amount: getTotalUsage(),
                       ),
                       ConstrainedBox(
                         constraints: BoxConstraints(maxHeight: 300, maxWidth: 400),
@@ -146,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
                           maxWidth: 400,
                         ),
                         child: CategoryListDisplay(
-                          recordGroups: getRecordGroups(),
+                          recordGroups: recordGroups,
                           onClick: _onCategoryButton,
                         ),
                       ),
