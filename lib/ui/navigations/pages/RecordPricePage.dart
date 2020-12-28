@@ -5,6 +5,7 @@ import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
+import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
@@ -94,10 +95,7 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
                 ),
                 Expanded(child: Container()),
                 BottomContentPadding(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 300,
-                    ),
+                  child: ButtonWidthConstraint(
                     child: TextRoundedButton(
                       "Confirm record",
                       onClick: _onRecordButton,

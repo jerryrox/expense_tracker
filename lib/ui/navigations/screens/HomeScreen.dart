@@ -18,6 +18,7 @@ import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ButtonGroup.dart';
+import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
@@ -165,10 +166,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
               ),
               BottomContentPadding(
                 child: ContentPadding(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 300,
-                    ),
+                  child: ButtonWidthConstraint(
                     child: RoundedButton(
                       isFullWidth: true,
                       onClick: _onRecordButton,
