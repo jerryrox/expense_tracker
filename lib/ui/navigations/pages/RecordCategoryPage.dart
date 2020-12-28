@@ -126,11 +126,11 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) => CategoryCell(
-                      category: categories[index],
-                      onClick: () => _onCategoryButton(categories[index]),
+                      category: filteredCategories[index],
+                      onClick: () => _onCategoryButton(filteredCategories[index]),
                     ),
                     separatorBuilder: (context, index) => LinedDivider(),
-                    itemCount: categories.length,
+                    itemCount: filteredCategories.length,
                   ),
                 ),
               ],
