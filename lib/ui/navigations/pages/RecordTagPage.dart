@@ -5,7 +5,7 @@ import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
-import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
+import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
@@ -16,11 +16,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecordTagPage extends StatefulWidget {
-  final NewRecordFormData formData;
+  final Category category;
+  final Item item;
 
   RecordTagPage({
     Key key,
-    this.formData,
+    this.category,
+    this.item,
   }) : super(key: key);
 
   @override
@@ -41,7 +43,10 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
   String get uid => userState.user.value.uid;
 
   /// Returns the current category in context.
-  Category get category => widget.formData.category;
+  Category get category => widget.category;
+
+  /// Returns the current item in context.
+  Item get item => widget.item;
 
 
   @override
@@ -87,10 +92,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Navigates to the item selection page.
   void navigateToItems() {
-    appNavigation.toRecordItemPage(context, NewRecordFormData(
-      category: widget.formData.category,
-      tags: [...selectedTags],
-    ));
+    appNavigation.toRecordPricePage(context, item, [...selectedTags]);
   }
 
   /// Sets the current search input value.

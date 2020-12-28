@@ -1,4 +1,6 @@
-import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
+import 'package:expense_tracker/modules/models/Category.dart';
+import 'package:expense_tracker/modules/models/Item.dart';
+import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordCategoryPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
@@ -30,19 +32,19 @@ class AppNavigation {
     _navPageGeneric(context, (context) => RecordCategoryPage());
   }
 
-  /// Shows the recording process's tag selection page.
-  toRecordTagPage(BuildContext context, NewRecordFormData formData) {
-    _navPageGeneric(context, (context) => RecordTagPage(formData: formData));
+  /// Shows the recording process's item selection page.
+  toRecordItemPage(BuildContext context, Category category) {
+    _navPageGeneric(context, (context) => RecordItemPage(category: category));
   }
 
-  /// Shows the recording process's item selection page.
-  toRecordItemPage(BuildContext context, NewRecordFormData formData) {
-    _navPageGeneric(context, (context) => RecordItemPage(formData: formData));
+  /// Shows the recording process's tag selection page.
+  toRecordTagPage(BuildContext context, Category category, Item item) {
+    _navPageGeneric(context, (context) => RecordTagPage(category: category, item: item));
   }
 
   /// Shows the recording process's price submission page.
-  toRecordPricePage(BuildContext context, NewRecordFormData formData) {
-    _navPageGeneric(context, (context) => RecordPricePage(formData: formData));
+  toRecordPricePage(BuildContext context, Item item, List<Tag> tags) {
+    _navPageGeneric(context, (context) => RecordPricePage(item: item, tags: tags));
   }
 
   /// Shows the next screen with generic behavior using the specified builder.

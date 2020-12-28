@@ -2,7 +2,6 @@ import 'package:expense_tracker/modules/api/createRecord/CreateRecordApi.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
-import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
@@ -13,11 +12,13 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class RecordPricePage extends StatefulWidget {
-  final NewRecordFormData formData;
+  final Item item;
+  final List<Tag> tags;
 
   RecordPricePage({
     Key key,
-    this.formData,
+    this.item,
+    this.tags,
   }) : super(key: key);
 
   @override
@@ -33,10 +34,10 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin {
   String get uid => userState.user.value.uid;
 
   /// Returns the item currently selected
-  Item get item => widget.formData.item;
+  Item get item => widget.item;
 
   /// Retursn the list of tags currently selected.
-  List<Tag> get tags => widget.formData.tags;
+  List<Tag> get tags => widget.tags;
 
   /// Creates a new record based on current state.
   Future createRecord() async {

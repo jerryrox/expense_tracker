@@ -5,7 +5,6 @@ import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
-import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
 import 'package:expense_tracker/ui/components/primitives/CategoryCell.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
@@ -90,9 +89,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Navigates to the tags selection page.
   void navigateToTags(Category category) {
-    appNavigation.toRecordTagPage(context, NewRecordFormData(
-      category: category,
-    ));
+    appNavigation.toRecordItemPage(context, category);
   }
 
   @override
