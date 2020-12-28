@@ -7,6 +7,7 @@ import 'package:expense_tracker/ui/navigations/pages/RecordGroupDetailPage.dart'
 import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordTagPage.dart';
+import 'package:expense_tracker/ui/navigations/screens/BudgetScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/HomeScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/SettingsScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/WelcomeScreen.dart';
@@ -24,10 +25,9 @@ class AppNavigation {
     return _navScreenGeneric(context, (context) => HomeScreen());
   }
 
-  /// Shows the detail screen.
-  toDetailScreen(BuildContext context) {
-    // TODO:
-    // return _showGeneric(context, (context) => HomeScreen());
+  /// Shows the budget screen.
+  toBudgetScreen(BuildContext context) {
+    return _navScreenGeneric(context, (context) => BudgetScreen());
   }
 
   /// Shows the settings screen.

@@ -22,15 +22,15 @@ class _NavMenuBarState extends State<NavMenuBar> {
   /// Navigates to the screen of specified index.
   void navigateToScreen(int index) {
     final selectedType = NavMenuScreenType.values[index];
-    if(selectedType == widget.curScreenType) {
+    if (selectedType == widget.curScreenType) {
       return;
     }
     switch (selectedType) {
       case NavMenuScreenType.home:
         appNavigation.toHomeScreen(context);
         break;
-      case NavMenuScreenType.detail:
-        // TODO:
+      case NavMenuScreenType.budget:
+        appNavigation.toBudgetScreen(context);
         break;
       case NavMenuScreenType.statistics:
         // TODO:
@@ -56,8 +56,8 @@ class _NavMenuBarState extends State<NavMenuBar> {
           label: "Home",
         ),
         BottomNavigationBarItem(
-          icon: Icon(IconAtlas.detail),
-          label: "Detail",
+          icon: Icon(IconAtlas.budget),
+          label: "Budget",
         ),
         BottomNavigationBarItem(
           icon: Icon(IconAtlas.statistics),
