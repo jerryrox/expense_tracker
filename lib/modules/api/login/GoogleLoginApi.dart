@@ -1,10 +1,9 @@
 import 'package:expense_tracker/modules/api/BaseApi.dart';
+import 'package:expense_tracker/modules/api/login/BaseLoginApi.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class GoogleLoginApi extends BaseApi<User> {
-
-  final FirebaseAuth auth = FirebaseAuth.instance;
+class GoogleLoginApi extends BaseLoginApi {
 
   Future<User> request() async {
     final googleUser = await GoogleSignIn().signIn();
