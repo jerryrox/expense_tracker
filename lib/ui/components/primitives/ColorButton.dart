@@ -14,16 +14,15 @@ class ColorButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Ink(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(1000),
-        color: color,
-      ),
-      height: size,
-      width: size,
-      child: InkWell(
-        onTap: onClick,
-        child: Container(),
+    return InkWell(
+      onTap: onClick,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(1000),
+          color: color,
+        ),
+        width: size,
+        height: size,
       ),
     );
   }

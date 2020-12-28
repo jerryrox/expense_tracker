@@ -14,31 +14,13 @@ class CategoryCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Ink(
-      color: theme.scaffoldBackgroundColor,
-      child: InkWell(
-        onTap: onClick,
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              ColorButton(
-                color: Color(category.color),
-                size: 24,
-              ),
-              SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  category.name,
-                ),
-              ),
-            ],
-          ),
-        ),
+    return ListTile(
+      onTap: onClick,
+      leading: ColorButton(
+        color: Color(category.color),
+        size: 24,
       ),
+      title: Text(category.name ?? ""),
     );
   }
 }
