@@ -1,4 +1,4 @@
-import 'package:expense_tracker/modules/dependencies/ScreenManager.dart';
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +17,17 @@ class NavMenuBar extends StatefulWidget {
 }
 
 class _NavMenuBarState extends State<NavMenuBar> {
-  ScreenManager get screenManager => Provider.of<ScreenManager>(context, listen: false);
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
   /// Navigates to the screen of specified index.
   void navigateToScreen(int index) {
-    switch (NavMenuScreenType.values[index]) {
+    final selectedType = NavMenuScreenType.values[index];
+    if(selectedType == widget.curScreenType) {
+      return;
+    }
+    switch (selectedType) {
       case NavMenuScreenType.home:
-        screenManager.toHome(context);
+        appNavigation.toHomeScreen(context);
         break;
       case NavMenuScreenType.detail:
         // TODO:

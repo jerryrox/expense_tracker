@@ -21,20 +21,23 @@ class PathUtils {
   }
 
   /// Returns a single path string with the specified segments combined.
-  static String combineSegments(List<String> segments) {
-    if(segments == null) {
-      return "/";
-    }
-
+  static String combineSegments(List<String> segments, {bool leadSlash = true}) {
     String path = "";
-    for(String segment in segments) {
-      if(segment != null) {
-        segment = segment.trim();
-        if(segment.isNotEmpty) {
-          path = "$path/$segment";
+    if(segments != null) {
+      for(String segment in segments) {
+        if(segment != null) {
+          segment = segment.trim();
+          if(segment.isNotEmpty) {
+            path = "$path/$segment";
+          }
         }
       }
     }
-    return path.isEmpty ? "/" : path;
+
+    path = path.isEmpty ? "/" : path;
+    if(!leadSlash) {
+      path = path.substring(1);
+    }
+    return path;
   }
 }

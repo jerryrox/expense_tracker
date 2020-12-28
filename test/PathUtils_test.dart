@@ -45,5 +45,8 @@ void main() {
     expect(PathUtils.combineSegments(["a", "", "cc"]), equals("/a/cc"));
     expect(PathUtils.combineSegments(["a", " ", "cc"]), equals("/a/cc"));
     expect(PathUtils.combineSegments(["a", null, "cc"]), equals("/a/cc"));
+
+    expect(PathUtils.combineSegments(null, leadSlash: false), equals(""));
+    expect(PathUtils.combineSegments(["a", null, "cc"], leadSlash: false), equals("a/cc"));
   });
 }

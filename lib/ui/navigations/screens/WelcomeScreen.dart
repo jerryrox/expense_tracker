@@ -1,7 +1,7 @@
-import 'package:expense_tracker/modules/dependencies/ScreenManager.dart';
+import 'package:expense_tracker/modules/api/login/AnonymousLoginApi.dart';
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
-import 'package:expense_tracker/modules/tasks/LoginTask.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
@@ -18,19 +18,18 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin {
   UserState get userState => Provider.of<UserState>(context, listen: false);
-  ScreenManager get screenManager => Provider.of<ScreenManager>(context, listen: false);
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
   /// Starts logging in anonymously.
   Future loginAnonymous() async {
     try {
-      final loginTask = LoginTask.anonymous();
-      final user = await loginTask.run();
+      final user = await AnonymousLoginApi().request();
       if (user == null) {
         throw "Failed to request anonymous login.";
       }
 
       userState.user.value = user;
-      screenManager.toHome(context);
+      appNavigation.toHomeScreen(context);
     } catch (e) {
       showSnackbar(context, e.toString());
     }
