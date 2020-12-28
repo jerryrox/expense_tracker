@@ -7,7 +7,7 @@ class TotalSpentDisplay extends StatelessWidget {
 
   TotalSpentDisplay({
     Key key,
-    @required this.dateRangeType,
+    this.dateRangeType,
     this.amount = 0,
   }) : super(key: key);
 
@@ -46,6 +46,6 @@ class TotalSpentDisplay extends StatelessWidget {
       case DateRangeType.year:
         return "Total spent this year";
     }
-    throw "DateRangeType cannot be null.";
+    return "Total spent";
   }
 }

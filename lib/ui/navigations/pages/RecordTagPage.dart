@@ -11,6 +11,7 @@ import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
+import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
 import 'package:expense_tracker/ui/components/primitives/TagCell.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:flutter/material.dart';
@@ -149,7 +150,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10),
+                PageTopMargin(),
                 Text(
                   "Search for the tag you want, or create a new one.",
                   textAlign: TextAlign.center,

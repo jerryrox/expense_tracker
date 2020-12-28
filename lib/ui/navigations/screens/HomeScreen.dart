@@ -25,7 +25,7 @@ import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/components/screens/home/CategoryListDisplay.dart';
-import 'package:expense_tracker/ui/components/screens/home/TotalSpentDisplay.dart';
+import 'package:expense_tracker/ui/components/primitives/TotalSpentDisplay.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -81,17 +81,14 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   /// Shows the record page to start recording a new item.
   Future showRecordPage() async {
-    try {
-      await appNavigation.toRecordCategoryPage(context);
-      loadData();
-    } catch (e) {
-      showSnackbar(context, e.toString());
-    }
+    await appNavigation.toRecordCategoryPage(context);
+    loadData();
   }
 
-  /// Shows the detail screen using the specified record group.
-  void showDetailScreen(RecordGroup recordGroup) {
-    // TODO: Navigate to DetailScreen. Pass the category and date range type.
+  /// Shows the detail page using the specified record group.
+  Future showDetailPage(RecordGroup recordGroup) async {
+    await appNavigation.toRecordGroupDetailPage(context, recordGroup);
+    loadData();
   }
 
   /// Returns the total amount of money used.
@@ -223,6 +220,6 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   /// Event called on category button click.
   void _onCategoryButton(RecordGroup recordGroup) {
-    showDetailScreen(recordGroup);
+    showDetailPage(recordGroup);
   }
 }
