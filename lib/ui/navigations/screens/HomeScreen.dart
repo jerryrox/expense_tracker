@@ -146,7 +146,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
                           amount: getTotalUsage(),
                         ),
                         ConstrainedBox(
-                          constraints: BoxConstraints(maxHeight: 300, maxWidth: 400),
+                          constraints: BoxConstraints(maxWidth: 400),
                           child: ExpenseChart(
                             data: getChartData(),
                           ),

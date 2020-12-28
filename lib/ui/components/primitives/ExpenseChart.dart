@@ -29,10 +29,7 @@ class ExpenseChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        return AspectRatio(
-          aspectRatio: 1,
-          child: _drawChartContent(constraints),
-        );
+        return _drawChartContent(constraints);
       },
     );
   }
@@ -46,7 +43,7 @@ class ExpenseChart extends StatelessWidget {
         colorList: getColors(),
         chartType: ChartType.disc,
         legendOptions: LegendOptions(
-          showLegends: true,
+          showLegends: false,
         ),
         chartValuesOptions: ChartValuesOptions(
           showChartValueBackground: false,
