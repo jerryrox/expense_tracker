@@ -1,5 +1,6 @@
 import 'package:expense_tracker/modules/api/createRecord/CreateRecordApi.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
@@ -25,7 +26,7 @@ class RecordPricePage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordPricePageState();
 }
 
-class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin {
+class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, LoaderMixin {
   double price = 0;
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
@@ -41,6 +42,8 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin {
 
   /// Creates a new record based on current state.
   Future createRecord() async {
+    final loader = showLoader(context);
+
     try {
       final api = CreateRecordApi(
         uid,
@@ -54,6 +57,8 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin {
     } catch (e) {
       showSnackbar(context, e.toString());
     }
+
+    loader.remove();
   }
 
   /// Sets the price of the record.

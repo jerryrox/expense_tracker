@@ -2,11 +2,11 @@ import 'package:expense_tracker/modules/api/createItem/CreateItemApi.dart';
 import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
-import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/ItemCell.dart';
@@ -27,7 +27,7 @@ class RecordItemPage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordItemPageState();
 }
 
-class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, SnackbarMixin {
+class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, SnackbarMixin, LoaderMixin {
   List<Item> items = [];
   List<Item> filteredItems = [];
   String searchValue = "";
@@ -55,6 +55,8 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
 
   /// Loads the list of items in the current category.
   Future loadItems() async {
+    final loader = showLoader(context);
+
     try {
       final api = GetItemsApi(uid).forCategory(category.id);
       final items = await api.request();
@@ -64,10 +66,14 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
       showSnackbar(context, e.toString());
       Navigator.of(context).pop();
     }
+
+    loader.remove();
   }
 
   /// Creates a new item using the search value provided.
   Future createItem() async {
+    final loader = showLoader(context);
+
     try {
       final name = searchValue.trim();
       if (name.isEmpty) {
@@ -81,6 +87,8 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
     } catch (e) {
       showSnackbar(context, e.toString());
     }
+    
+    loader.remove();
   }
 
   /// Applies filter to displayed items list using search value.
