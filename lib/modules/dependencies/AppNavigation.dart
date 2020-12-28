@@ -1,7 +1,9 @@
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
+import 'package:expense_tracker/modules/models/RecordGroup.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordCategoryPage.dart';
+import 'package:expense_tracker/ui/navigations/pages/RecordGroupDetailPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordTagPage.dart';
@@ -51,6 +53,11 @@ class AppNavigation {
   /// Shows the recording process's price submission page.
   toRecordPricePage(BuildContext context, Item item, List<Tag> tags) {
     return _navPageGeneric(context, (context) => RecordPricePage(item: item, tags: tags));
+  }
+
+  /// Shows the detail page for the specified record group.
+  toRecordGroupDetailPage(BuildContext context, RecordGroup recordGroup) {
+    return _navPageGeneric(context, (context) => RecordGroupDetailPage(recordGroup: recordGroup));
   }
 
   /// Shows the next screen with generic behavior using the specified builder.
