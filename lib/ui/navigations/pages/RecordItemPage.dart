@@ -11,6 +11,7 @@ import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/ItemCell.dart';
 import 'package:expense_tracker/ui/components/primitives/LinedDivider.dart';
+import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -128,7 +129,7 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10),
+                PageTopMargin(),
                 Text("Search for an item, or create a new one."),
                 SizedBox(height: 10),
                 TextField(

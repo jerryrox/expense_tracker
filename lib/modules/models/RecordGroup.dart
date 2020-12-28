@@ -21,6 +21,19 @@ class RecordGroup {
 
   RecordGroup(this.category);
 
+  /// Finds and removes the specified record.
+  void removeRecord(Record record) {
+    for(final item in itemDictionary.keys) {
+      final records = itemDictionary[item];
+      for(int i=0; i<records.length; i++) {
+        if(records[i].id == record.id) {
+          records.removeAt(i);
+          break;
+        }
+      }
+    }
+  }
+
   /// Adds a new item and records list to this group.
   void addItemRecords(Item item, List<Record> records) {
     if(records.isEmpty) {

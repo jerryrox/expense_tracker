@@ -3,12 +3,14 @@ import 'package:expense_tracker/modules/api/login/BaseLoginApi.dart';
 import 'package:expense_tracker/modules/api/login/GoogleLoginApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
+import 'package:expense_tracker/ui/navigations/popups/SelectionDialogPopup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -20,7 +22,7 @@ class WelcomeScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, LoaderMixin {
+class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, LoaderMixin, DialogMixin {
   UserState get userState => Provider.of<UserState>(context, listen: false);
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
@@ -31,7 +33,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, Loade
 
   /// Starts logging in anonymously.
   Future loginAnonymous() async {
-    // TODO: Show confirmation dialog
+    final confirmLabel = "Confirm";
+    final selection = await showDialogDefault<String>(context, SelectionDialogPopup(
+      title: "Anonymous login",
+      message: "By using this app anonymously, your data will not be retrievable once you change your device or reinstall the app. Are you sure you want to continue anonymously?",
+      selections: [confirmLabel, "Cancel"],
+    ));
+    if(selection != confirmLabel) {
+      return;
+    }
     
     await _handleLogin(AnonymousLoginApi());
   }

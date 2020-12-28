@@ -10,6 +10,7 @@ import 'package:expense_tracker/ui/components/primitives/CategoryCell.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/LinedDivider.dart';
+import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:expense_tracker/ui/navigations/popups/CategoryCreatePopup.dart';
 import 'package:flutter/material.dart';
@@ -107,7 +108,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10),
+                PageTopMargin(),
                 Text(
                   "Search for the category you want, or create a new one.",
                   textAlign: TextAlign.center,

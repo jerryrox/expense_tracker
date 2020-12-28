@@ -7,6 +7,7 @@ import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
+import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -79,7 +80,7 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 10),
+                PageTopMargin(),
                 Text("Enter the price of the item."),
                 TextField(
                   onChanged: _onPriceChanged,

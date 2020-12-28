@@ -9,7 +9,7 @@ class TagCell extends StatelessWidget {
   TagCell({
     Key key,
     this.tag,
-    this.isSelected,
+    this.isSelected = false,
     this.onClick,
   }) : super(key: key);
 
