@@ -18,7 +18,13 @@ class RecordGroupMaker {
       if (trimEmpty && recordsforItem.isEmpty) {
         continue;
       }
-      groups.add(RecordGroup(category, item, records));
+
+      RecordGroup group = groups.firstWhere((element) => element.category == category, orElse: () => null);
+      if(group == null) {
+        group = RecordGroup(category);
+        groups.add(group);
+      }
+      group.addItemRecords(item, recordsforItem);
     }
     return groups;
   }
