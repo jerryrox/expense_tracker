@@ -61,6 +61,8 @@ class RecordCell extends StatelessWidget {
               ],
             ),
             Wrap(
+              runAlignment: WrapAlignment.start,
+              spacing: 2,
               children: tags.map((e) => TagCell(tag: e)).toList(),
             ),
           ],

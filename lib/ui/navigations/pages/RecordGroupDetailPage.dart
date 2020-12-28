@@ -1,5 +1,7 @@
+import 'package:expense_tracker/modules/api/deleteRecord/DeleteRecordApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
@@ -14,6 +16,7 @@ import 'package:expense_tracker/ui/components/primitives/LinedDivider.dart';
 import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
 import 'package:expense_tracker/ui/components/primitives/RecordCell.dart';
 import 'package:expense_tracker/ui/components/primitives/TotalSpentDisplay.dart';
+import 'package:expense_tracker/ui/navigations/popups/SelectionDialogPopup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +32,7 @@ class RecordGroupDetailPage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordGroupDetailPageState();
 }
 
-class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with UtilMixin, SnackbarMixin, LoaderMixin {
+class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with UtilMixin, SnackbarMixin, LoaderMixin, DialogMixin {
   List<Record> records = [];
   List<Tag> tags = [];
 
@@ -63,6 +66,35 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
       final tags = await api.request();
       setState(() => this.tags = tags);
     } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+
+    loader.remove();
+  }
+
+  /// Starts listening to user's selection on what to do with the selected record.
+  Future queryRecordAction(Record record) async {
+    final deleteAction = "Delete";
+    final selection = await showDialogDefault<String>(context, SelectionDialogPopup(
+      message: "Choose an action for this record",
+      selections: [deleteAction, "Cancel"],
+    ));
+
+    if(selection == deleteAction) {
+      deleteRecord(record);
+    }
+  }
+
+  /// Deletes the specified record.
+  Future deleteRecord(Record record) async {
+    final loader = showLoader(context);
+
+    try {
+      final api = DeleteRecordApi(uid, record.id);
+      await api.request();
+      _removeRecord(record);
+    }
+    catch(e) {
       showSnackbar(context, e.toString());
     }
 
@@ -130,8 +162,16 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
     return tags.where((element) => ids.contains(element.id)).toList();
   }
 
+  /// Removes the specified record from the record group and the records list.
+  void _removeRecord(Record record) {
+    setState(() {
+      widget.recordGroup.removeRecord(record);
+      records.remove(record);
+    });
+  }
+
   /// Event called when the record button was clicked.
   void _onRecordButton(Record record) {
-    // TODO:
+    queryRecordAction(record);
   }
 }
