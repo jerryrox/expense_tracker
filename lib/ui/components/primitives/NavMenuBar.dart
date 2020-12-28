@@ -36,7 +36,7 @@ class _NavMenuBarState extends State<NavMenuBar> {
         // TODO:
         break;
       case NavMenuScreenType.settings:
-        // TODO:
+        appNavigation.toSettingsScreen(context);
         break;
     }
   }

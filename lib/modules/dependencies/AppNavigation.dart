@@ -6,6 +6,7 @@ import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordTagPage.dart';
 import 'package:expense_tracker/ui/navigations/screens/HomeScreen.dart';
+import 'package:expense_tracker/ui/navigations/screens/SettingsScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/WelcomeScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,11 @@ class AppNavigation {
   toDetailScreen(BuildContext context) {
     // TODO:
     // return _showGeneric(context, (context) => HomeScreen());
+  }
+
+  /// Shows the settings screen.
+  toSettingsScreen(BuildContext context) {
+    return _navScreenGeneric(context, (context) => SettingsScreen());
   }
 
   /// Shows the recording process's category selection page.

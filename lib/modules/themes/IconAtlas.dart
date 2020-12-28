@@ -10,6 +10,7 @@ class IconAtlas {
   static final detail = Icons.details;
   static final statistics = Icons.trending_up;
   static final settings = Icons.settings;
+  static final logout = Icons.logout;
 
   IconAtlas._();
 }
