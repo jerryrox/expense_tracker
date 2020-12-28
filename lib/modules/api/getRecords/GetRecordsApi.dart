@@ -52,7 +52,7 @@ class GetRecordsApi extends BaseApi<List<Record>> {
         date: (data["date"] as Timestamp).toDate(),
         itemId: data["itemId"] as String,
         price: data["price"] as double,
-        tagIds: List.from(data["tagIds"] as Iterable<String>),
+        tagIds: List.from(data["tagIds"] as Iterable<dynamic>),
       );
     }).toList();
   }
