@@ -1,6 +1,7 @@
 import 'package:expense_tracker/modules/models/NewRecordFormData.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordCategoryPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
+import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordTagPage.dart';
 import 'package:expense_tracker/ui/navigations/screens/HomeScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/WelcomeScreen.dart';
@@ -37,6 +38,11 @@ class AppNavigation {
   /// Shows the recording process's item selection page.
   toRecordItemPage(BuildContext context, NewRecordFormData formData) {
     _navPageGeneric(context, (context) => RecordItemPage(formData: formData));
+  }
+
+  /// Shows the recording process's price submission page.
+  toRecordPricePage(BuildContext context, NewRecordFormData formData) {
+    _navPageGeneric(context, (context) => RecordPricePage(formData: formData));
   }
 
   /// Shows the next screen with generic behavior using the specified builder.
