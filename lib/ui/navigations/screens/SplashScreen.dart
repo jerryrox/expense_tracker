@@ -1,6 +1,6 @@
 import 'package:expense_tracker/modules/api/login/AutoLoginApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:flutter/material.dart';

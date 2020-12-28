@@ -1,7 +1,7 @@
 import 'package:expense_tracker/modules/api/createTag/CreateTagApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';

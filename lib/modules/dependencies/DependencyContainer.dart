@@ -1,5 +1,5 @@
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 

@@ -2,7 +2,7 @@ import 'package:expense_tracker/modules/api/login/AnonymousLoginApi.dart';
 import 'package:expense_tracker/modules/api/login/BaseLoginApi.dart';
 import 'package:expense_tracker/modules/api/login/GoogleLoginApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
