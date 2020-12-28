@@ -1,6 +1,7 @@
 import 'package:expense_tracker/modules/api/createCategory/CreateCategoryApi.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
+import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
@@ -24,7 +25,7 @@ class CategoryCreatePopup extends StatefulWidget {
   State<StatefulWidget> createState() => _CategoryCreatePopupState();
 }
 
-class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixin, SnackbarMixin, DialogMixin {
+class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixin, SnackbarMixin, DialogMixin, LoaderMixin {
   static final int maxNameLength = 12;
 
   String name;
@@ -65,6 +66,8 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
 
   /// Creates a new category from current stae.
   Future createCategory() async {
+    final loader = showLoader(context);
+
     try {
       if (name.trim().isEmpty) {
         throw "Please enter a valid name.";
@@ -76,6 +79,8 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
     } catch (e) {
       showSnackbar(context, e.toString());
     }
+
+    loader.remove();
   }
 
   /// Starts a new color picker process for the user.

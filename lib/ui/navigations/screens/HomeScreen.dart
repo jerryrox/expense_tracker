@@ -3,6 +3,7 @@ import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
 import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
@@ -35,7 +36,7 @@ class HomeScreen extends StatefulWidget {
   State<StatefulWidget> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
+class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, LoaderMixin {
   DateRangeType dateRangeType = DateRangeType.day;
   List<RecordGroup> recordGroups = [];
 
@@ -56,6 +57,8 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
 
   /// Loads all data necessary to display the record data.
   Future loadData() async {
+    final loader = showLoader(context);
+
     try {
       final categories = await _retrieveCategories();
       final items = await _retrieveItems();
@@ -67,6 +70,8 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin {
     catch(e) {
       showSnackbar(context, e.toString());
     }
+
+    loader.remove();
   }
 
   /// Sets the specified date range for data displayal.

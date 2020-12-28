@@ -2,6 +2,7 @@ import 'package:expense_tracker/modules/api/createTag/CreateTagApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
@@ -29,7 +30,7 @@ class RecordTagPage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordTagPageState();
 }
 
-class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarMixin {
+class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarMixin, LoaderMixin {
   List<Tag> tags = [];
   List<Tag> filteredTags = [];
   List<Tag> selectedTags = [];
@@ -60,6 +61,8 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Loads the list of tags included for the current category.
   Future loadTags() async {
+    final loader = showLoader(context);
+
     try {
       final api = GetTagsApi(uid).forCategory(category.id);
       final tags = await api.request();
@@ -70,10 +73,14 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
       showSnackbar(context, e.toString());
       Navigator.of(context).pop();
     }
+
+    loader.remove();
   }
 
   /// Creates a new tag with current search value as name.
   Future createTag() async {
+    final loader = showLoader(context);
+
     try {
       final name = searchValue.trim();
       if(name.isEmpty) {
@@ -88,6 +95,8 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
     catch(e) {
       showSnackbar(context, e.toString());
     }
+
+    loader.remove();
   }
 
   /// Navigates to the item selection page.

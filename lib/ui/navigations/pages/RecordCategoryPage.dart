@@ -2,6 +2,7 @@ import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart'
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
+import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
@@ -21,7 +22,7 @@ class RecordCategoryPage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordCategoryPageState();
 }
 
-class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin, SnackbarMixin, DialogMixin {
+class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin, SnackbarMixin, DialogMixin, LoaderMixin {
   List<Category> categories = [];
   List<Category> filteredCategories = [];
   String searchValue = "";
@@ -40,6 +41,8 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Loads the list of categories recorded by this user.
   Future loadCategories() async {
+    final loader = showLoader(context);
+
     try {
       final categories = await GetCategoriesApi(userState.user.value.uid).request();
       setState(() => this.categories = categories);
@@ -48,10 +51,14 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
       showSnackbar(context, e.toString());
       Navigator.of(context).pop();
     }
+
+    loader.remove();
   }
 
   /// Starts a new category creation process for the user.
   Future createCategory() async {
+    final loader = showLoader(context);
+
     try {
       final category = await showDialogDefault<Category>(
         context,
@@ -64,6 +71,8 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     } catch (e) {
       showSnackbar(context, e.toString());
     }
+
+    loader.remove();
   }
 
   /// Sets the current search value.
