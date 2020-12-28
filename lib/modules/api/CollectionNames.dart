@@ -7,6 +7,7 @@ class CollectionNames {
   static final String tags = "tags";
   static final String items = "items";
   static final String records = "records";
+  static final String specialBudgets = "specialBudgets";
 
   CollectionNames._();
 
@@ -32,6 +33,11 @@ class CollectionNames {
 
   /// Returns the path of a collection or document for a user's record.
   static String getRecordPath(String uid, {String id}) {
+    return PathUtils.combineSegments([getUserPath(uid: uid), records, id], leadSlash: false);
+  }
+
+  /// Returns the path of a collection or document for a user's special budget.
+  static String getSpecialBudgetPath(String uid, {String id}) {
     return PathUtils.combineSegments([getUserPath(uid: uid), records, id], leadSlash: false);
   }
 }

@@ -1,15 +1,17 @@
 import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 
-class GetBaseBudgetApi extends BaseFirestoreApi<double> {
+class UpdateBaseBudgetApi extends BaseFirestoreApi {
 
   String uid;
+  double baseBudget;
 
-  GetBaseBudgetApi(this.uid);
+  UpdateBaseBudgetApi(this.uid, this.baseBudget);
 
-  Future<double> request() async {
+  Future request() async {
     final doc = firestore.doc(CollectionNames.getUserPath(uid: uid));
-    final data = await doc.get();
-    return (data["baseBudget"] as double) ?? 0;
+    await doc.update({
+      "baseBudget": baseBudget,
+    });
   }
 }

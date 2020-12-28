@@ -5,6 +5,11 @@ class UserState {
 
   final Bindable<User> user = Bindable(null);
 
+
+  /// Returns the uid of the current user.
+  String get uid => user.value.uid;
+
+
   /// Returns the string value which describes the user's identity.
   String getUserIdentity() {
     final user = this.user.value;

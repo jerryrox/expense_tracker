@@ -1,3 +1,6 @@
+import 'package:expense_tracker/modules/api/getBaseBudget/GetBaseBudgetApi.dart';
+import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
@@ -8,6 +11,7 @@ import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class BudgetScreen extends StatefulWidget {
   BudgetScreen({Key key}) : super(key: key);
@@ -17,6 +21,10 @@ class BudgetScreen extends StatefulWidget {
 }
 
 class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMixin, LoaderMixin {
+
+  UserState get userState => Provider.of<UserState>(context, listen: false);
+  BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
+
   /// Returns whether there is a budget set up by the user.
   bool get hasBudget => false;
 
@@ -31,7 +39,14 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Loads budget data from server.
   Future loadBudget() async {
-    
+    try {
+      final api = GetBaseBudgetApi(userState.uid);
+      final baseBudget = await api.request();
+      setState(() => budgetState.baseBudget.value = baseBudget);
+    }
+    catch(e) {
+      showSnackbar(context, e.toString());
+    }
   }
 
   /// Starts a new budget set up process for the user.
