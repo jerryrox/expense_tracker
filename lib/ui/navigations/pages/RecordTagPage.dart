@@ -49,7 +49,6 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
   /// Returns the current item in context.
   Item get item => widget.item;
 
-
   @override
   void initState() {
     super.initState();
@@ -68,8 +67,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
       final tags = await api.request();
       setState(() => this.tags = tags);
       applyFilter();
-    }
-    catch(e) {
+    } catch (e) {
       showSnackbar(context, e.toString());
       Navigator.of(context).pop();
     }
@@ -83,7 +81,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
     try {
       final name = searchValue.trim();
-      if(name.isEmpty) {
+      if (name.isEmpty) {
         throw "Please enter a valid name.";
       }
 
@@ -91,8 +89,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
       final tag = await api.request();
       setState(() => tags.add(tag));
       applyFilter();
-    }
-    catch(e) {
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
 
@@ -101,7 +98,9 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Navigates to the item selection page.
   void navigateToItems() {
-    appNavigation.toRecordPricePage(context, item, [...selectedTags]);
+    appNavigation.toRecordPricePage(context, item, [
+      ...selectedTags
+    ]);
   }
 
   /// Sets the current search input value.
@@ -112,10 +111,9 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Toggles selection state for the specified tag.
   void selectTag(Tag tag) {
-    if(_isSelected(tag)) {
+    if (_isSelected(tag)) {
       setState(() => selectedTags.remove(tag));
-    }
-    else {
+    } else {
       setState(() => selectedTags.add(tag));
     }
   }
@@ -123,16 +121,13 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
   /// Applies search filter on the tags list.
   void applyFilter() {
     List<Tag> filtered = [];
-    if(searchValue.isEmpty) {
+    if (searchValue.isEmpty) {
       filtered.addAll(tags);
-    }
-    else {
-      filtered.addAll(
-        tags.where((element) => element.name.toLowerCase().contains(searchValue.toLowerCase()))
-      );
+    } else {
+      filtered.addAll(tags.where((element) => element.name.toLowerCase().contains(searchValue.toLowerCase())));
       // Ensure the selected tags are included as well.
-      for(final selected in selectedTags) {
-        if(!filtered.contains(selected)) {
+      for (final selected in selectedTags) {
+        if (!filtered.contains(selected)) {
           filtered.add(selected);
         }
       }
@@ -148,51 +143,53 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
       appBar: AppBar(
         title: Text("Select tags"),
       ),
-      body: FilledBox(
-        child: ContentPadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                "Search for the tag you want, or create a new one.",
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: _onSearchValueChanged,
-              ),
-              SizedBox(height: 10),
-              TextRoundedButton(
-                searchValue.isEmpty ? "Create tag" : "Create tag ($searchValue)",
-                onClick: _onCreateTagButton,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: Wrap(
-                  spacing: 4,
-                  children: filteredTags.map((e) {
-                    return TagCell(
-                      tag: e,
-                      isSelected: _isSelected(e),
-                      onClick: () => _onTagButton(e),
-                    );
-                  }).toList(),
+      body: SafeArea(
+        child: FilledBox(
+          child: ContentPadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 10),
+                Text(
+                  "Search for the tag you want, or create a new one.",
+                  textAlign: TextAlign.center,
                 ),
-              ),
-              BottomContentPadding(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 300,
-                  ),
-                  child: TextRoundedButton(
-                    selectedTags.isEmpty ? "Skip" : "Next",
-                    isFullWidth: true,
-                    onClick: _onNextButton,
+                SizedBox(height: 10),
+                TextField(
+                  onChanged: _onSearchValueChanged,
+                ),
+                SizedBox(height: 10),
+                TextRoundedButton(
+                  searchValue.isEmpty ? "Create tag" : "Create tag ($searchValue)",
+                  onClick: _onCreateTagButton,
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: Wrap(
+                    spacing: 4,
+                    children: filteredTags.map((e) {
+                      return TagCell(
+                        tag: e,
+                        isSelected: _isSelected(e),
+                        onClick: () => _onTagButton(e),
+                      );
+                    }).toList(),
                   ),
                 ),
-              ),
-            ],
+                BottomContentPadding(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 300,
+                    ),
+                    child: TextRoundedButton(
+                      selectedTags.isEmpty ? "Skip" : "Next",
+                      isFullWidth: true,
+                      onClick: _onNextButton,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -209,10 +206,10 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
     tags.sort((x, y) {
       final selectedX = _isSelected(x);
       final selectedY = _isSelected(y);
-      if(selectedX && !selectedY) {
+      if (selectedX && !selectedY) {
         return -1;
       }
-      if(!selectedX && selectedY) {
+      if (!selectedX && selectedY) {
         return 1;
       }
       return x.name.toLowerCase().compareTo(y.name.toLowerCase());
@@ -234,7 +231,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
     selectTag(tag);
   }
 
-  /// Event called when the "next" button was clicked 
+  /// Event called when the "next" button was clicked
   void _onNextButton() {
     navigateToItems();
   }

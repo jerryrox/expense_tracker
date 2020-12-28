@@ -73,36 +73,38 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
       appBar: AppBar(
         title: Text("Record price"),
       ),
-      body: FilledBox(
-        child: ContentPadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 10),
-              Text("Enter the price of the item."),
-              TextField(
-                onChanged: _onPriceChanged,
-                inputFormatters: [
-                  FilteringTextInputFormatter(RegExp(r"^[0-9]*(\.[0-9]{0,2})?$"), allow: true),
-                ],
-                keyboardType: TextInputType.numberWithOptions(
-                  decimal: true,
-                  signed: false,
-                ),
-              ),
-              Expanded(child: Container()),
-              BottomContentPadding(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 300,
-                  ),
-                  child: TextRoundedButton(
-                    "Confirm record",
-                    onClick: _onRecordButton,
+      body: SafeArea(
+        child: FilledBox(
+          child: ContentPadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 10),
+                Text("Enter the price of the item."),
+                TextField(
+                  onChanged: _onPriceChanged,
+                  inputFormatters: [
+                    FilteringTextInputFormatter(RegExp(r"^[0-9]*(\.[0-9]{0,2})?$"), allow: true),
+                  ],
+                  keyboardType: TextInputType.numberWithOptions(
+                    decimal: true,
+                    signed: false,
                   ),
                 ),
-              ),
-            ],
+                Expanded(child: Container()),
+                BottomContentPadding(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 300,
+                    ),
+                    child: TextRoundedButton(
+                      "Confirm record",
+                      onClick: _onRecordButton,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

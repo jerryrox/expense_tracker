@@ -57,22 +57,18 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Starts a new category creation process for the user.
   Future createCategory() async {
-    final loader = showLoader(context);
-
     try {
       final category = await showDialogDefault<Category>(
         context,
         CategoryCreatePopup(initialName: searchValue.trim()),
       );
-      if(category != null) {
+      if (category != null) {
         setState(() => categories.add(category));
         filterCategories();
       }
     } catch (e) {
       showSnackbar(context, e.toString());
     }
-
-    loader.remove();
   }
 
   /// Sets the current search value.
@@ -87,9 +83,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     if (searchValue.isEmpty) {
       filtered.addAll(categories);
     } else {
-      filtered.addAll(
-        categories.where((element) => element.name.toLowerCase().contains(searchValue.toLowerCase()))
-      );
+      filtered.addAll(categories.where((element) => element.name.toLowerCase().contains(searchValue.toLowerCase())));
     }
     _sortCategories(filtered);
 
@@ -107,38 +101,40 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
       appBar: AppBar(
         title: Text("Select a category"),
       ),
-      body: FilledBox(
-        child: ContentPadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 10),
-              Text(
-                "Search for the category you want, or create a new one.",
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: _onSearchValueChange,
-              ),
-              SizedBox(height: 10),
-              TextRoundedButton(
-                "Create a new category",
-                isFullWidth: true,
-                onClick: _onCreateButton,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView.separated(
-                  itemBuilder: (context, index) => CategoryCell(
-                    category: categories[index],
-                    onClick: () => _onCategoryButton(categories[index]),
-                  ),
-                  separatorBuilder: (context, index) => LinedDivider(),
-                  itemCount: categories.length,
+      body: SafeArea(
+        child: FilledBox(
+          child: ContentPadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 10),
+                Text(
+                  "Search for the category you want, or create a new one.",
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                TextField(
+                  onChanged: _onSearchValueChange,
+                ),
+                SizedBox(height: 10),
+                TextRoundedButton(
+                  "Create a new category",
+                  isFullWidth: true,
+                  onClick: _onCreateButton,
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (context, index) => CategoryCell(
+                      category: categories[index],
+                      onClick: () => _onCategoryButton(categories[index]),
+                    ),
+                    separatorBuilder: (context, index) => LinedDivider(),
+                    itemCount: categories.length,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

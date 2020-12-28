@@ -111,28 +111,30 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
         FlatButton(child: Text("Create"), onPressed: _onCreateButton),
         FlatButton(child: Text("Cancel"), onPressed: _onCancelButton),
       ],
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text("1. Set the new category's name"),
-          Text("(e.g. Games / Rent / Food / etc...)"),
-          TextField(
-            controller: inputController,
-            maxLength: maxNameLength,
-            onChanged: _onNameChanged,
-          ),
-          SizedBox(height: 20),
-          Text("2. Choose a color for the category"),
-          SizedBox(height: 5),
-          ColorButton(
-            color: color,
-            size: 40,
-            onClick: _onColorButton,
-          ),
-          SizedBox(height: 20),
-          Text("(You can always edit these properties later.)"),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("1. Set the new category's name"),
+            Text("(e.g. Games / Rent / Food / etc...)"),
+            TextField(
+              controller: inputController,
+              maxLength: maxNameLength,
+              onChanged: _onNameChanged,
+            ),
+            SizedBox(height: 20),
+            Text("2. Choose a color for the category"),
+            SizedBox(height: 5),
+            ColorButton(
+              color: color,
+              size: 40,
+              onClick: _onColorButton,
+            ),
+            SizedBox(height: 20),
+            Text("(You can always edit these properties later.)"),
+          ],
+        ),
       ),
     );
   }

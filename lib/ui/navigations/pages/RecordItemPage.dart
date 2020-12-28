@@ -87,7 +87,7 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
     } catch (e) {
       showSnackbar(context, e.toString());
     }
-    
+
     loader.remove();
   }
 
@@ -122,37 +122,39 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
       appBar: AppBar(
         title: Text("Select an item"),
       ),
-      body: FilledBox(
-        child: ContentPadding(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(height: 10),
-              Text("Search for an item, or create a new one."),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: _onSearchValueChanged,
-              ),
-              SizedBox(height: 10),
-              TextRoundedButton(
-                !hasSearchValue ? "Create new item" : "Create new item (${searchValue.trim()})",
-                onClick: _onCreateButton,
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView.separated(
-                  itemBuilder: (context, index) {
-                    final item = filteredItems[index];
-                    return ItemCell(
-                      item: item,
-                      onClick: () => _onItemButton(item),
-                    );
-                  },
-                  separatorBuilder: (context, index) => LinedDivider(),
-                  itemCount: filteredItems.length,
+      body: SafeArea(
+        child: FilledBox(
+          child: ContentPadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: 10),
+                Text("Search for an item, or create a new one."),
+                SizedBox(height: 10),
+                TextField(
+                  onChanged: _onSearchValueChanged,
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                TextRoundedButton(
+                  !hasSearchValue ? "Create new item" : "Create new item (${searchValue.trim()})",
+                  onClick: _onCreateButton,
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      final item = filteredItems[index];
+                      return ItemCell(
+                        item: item,
+                        onClick: () => _onItemButton(item),
+                      );
+                    },
+                    separatorBuilder: (context, index) => LinedDivider(),
+                    itemCount: filteredItems.length,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

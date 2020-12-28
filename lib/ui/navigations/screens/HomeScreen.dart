@@ -66,8 +66,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
       setState(() {
         this.recordGroups = RecordGroupMaker.make(categories, items, records);
       });
-    }
-    catch(e) {
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
 
@@ -85,8 +84,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
     try {
       await appNavigation.toRecordCategoryPage(context);
       loadData();
-    }
-    catch(e) {
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
   }
@@ -99,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
   /// Returns the total amount of money used.
   double getTotalUsage() {
     double usage = 0;
-    for(final group in recordGroups) {
+    for (final group in recordGroups) {
       usage += group.totalAmount;
     }
     return usage;
@@ -120,75 +118,77 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
       bottomNavigationBar: NavMenuBar(
         curScreenType: NavMenuScreenType.home,
       ),
-      body: FilledBox(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: ContentPadding(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      TitleText("Overview"),
-                      ButtonGroup(
-                        [
-                          "Day",
-                          "Week",
-                          "Month",
-                          "Year",
-                        ],
-                        selectedIndex: dateRangeType.index,
-                        onSelection: _onDateTypeSelection,
-                      ),
-                      SizedBox(height: 20),
-                      TotalSpentDisplay(
-                        dateRangeType: dateRangeType,
-                        amount: getTotalUsage(),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(maxHeight: 300, maxWidth: 400),
-                        child: ExpenseChart(
-                          data: getChartData(),
-                        ),
-                      ),
-                      ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: 400,
-                        ),
-                        child: CategoryListDisplay(
-                          recordGroups: recordGroups,
-                          onClick: _onCategoryButton,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            BottomContentPadding(
-              child: ContentPadding(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: 300,
-                  ),
-                  child: RoundedButton(
-                    isFullWidth: true,
-                    onClick: _onRecordButton,
-                    child: Row(
+      body: SafeArea(
+        child: FilledBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: ContentPadding(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(IconAtlas.record, color: theme.scaffoldBackgroundColor),
-                        SizedBox(width: 8),
-                        Text("Record new", style: TextStyle(color: theme.scaffoldBackgroundColor)),
+                        TitleText("Overview"),
+                        ButtonGroup(
+                          [
+                            "Day",
+                            "Week",
+                            "Month",
+                            "Year",
+                          ],
+                          selectedIndex: dateRangeType.index,
+                          onSelection: _onDateTypeSelection,
+                        ),
+                        SizedBox(height: 20),
+                        TotalSpentDisplay(
+                          dateRangeType: dateRangeType,
+                          amount: getTotalUsage(),
+                        ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(maxHeight: 300, maxWidth: 400),
+                          child: ExpenseChart(
+                            data: getChartData(),
+                          ),
+                        ),
+                        ConstrainedBox(
+                          constraints: BoxConstraints(
+                            maxWidth: 400,
+                          ),
+                          child: CategoryListDisplay(
+                            recordGroups: recordGroups,
+                            onClick: _onCategoryButton,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+              BottomContentPadding(
+                child: ContentPadding(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: 300,
+                    ),
+                    child: RoundedButton(
+                      isFullWidth: true,
+                      onClick: _onRecordButton,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(IconAtlas.record, color: theme.scaffoldBackgroundColor),
+                          SizedBox(width: 8),
+                          Text("Record new", style: TextStyle(color: theme.scaffoldBackgroundColor)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

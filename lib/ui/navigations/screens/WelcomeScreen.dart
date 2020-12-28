@@ -24,7 +24,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, Loade
   /// Starts logging in anonymously.
   Future loginAnonymous() async {
     final loader = showLoader(context);
-    
+
     try {
       final user = await AnonymousLoginApi().request();
       if (user == null) {
@@ -43,54 +43,56 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, Loade
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FilledBox(
-        child: ContentPadding(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      IconAtlas.app,
-                      size: 48,
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Expense Tracker",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
+      body: SafeArea(
+        child: FilledBox(
+          child: ContentPadding(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        IconAtlas.app,
+                        size: 48,
                       ),
-                    ),
-                    SizedBox(height: 40),
-                    Text(
-                      "Record, organize, and view your expenses.",
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(
-                      "Save money!",
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      Text(
+                        "Expense Tracker",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 22,
+                        ),
+                      ),
+                      SizedBox(height: 40),
+                      Text(
+                        "Record, organize, and view your expenses.",
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(
+                        "Save money!",
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: 300,
+                SizedBox(height: 20),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: 300,
+                  ),
+                  child: RoundedButton(
+                    child: Text("Get started"),
+                    isFullWidth: true,
+                    onClick: _onGetStartedButton,
+                  ),
                 ),
-                child: RoundedButton(
-                  child: Text("Get started"),
-                  isFullWidth: true,
-                  onClick: _onGetStartedButton,
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
+                SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
