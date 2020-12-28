@@ -81,8 +81,14 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
   }
 
   /// Shows the record page to start recording a new item.
-  void showRecordPage() {
-    appNavigation.toRecordCategoryPage(context);
+  Future showRecordPage() async {
+    try {
+      await appNavigation.toRecordCategoryPage(context);
+      loadData();
+    }
+    catch(e) {
+      showSnackbar(context, e.toString());
+    }
   }
 
   /// Shows the detail screen using the specified record group.

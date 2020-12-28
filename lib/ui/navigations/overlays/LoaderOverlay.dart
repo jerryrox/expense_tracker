@@ -7,6 +7,8 @@ class LoaderOverlay extends StatelessWidget with UtilMixin {
   @override
   Widget build(BuildContext context) {
     return Material(
+      type: MaterialType.transparency,
+      color: Colors.transparent,
       child: Container(
         width: getScreenWidth(context),
         height: getScreenHeight(context),

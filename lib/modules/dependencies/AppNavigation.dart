@@ -13,43 +13,43 @@ import 'package:flutter/material.dart';
 class AppNavigation {
   /// Shows the welcome screen.
   toWelcomeScreen(BuildContext context) {
-    _navScreenGeneric(context, (context) => WelcomeScreen());
+    return _navScreenGeneric(context, (context) => WelcomeScreen());
   }
 
   /// Shows the home screen.
   toHomeScreen(BuildContext context) {
-    _navScreenGeneric(context, (context) => HomeScreen());
+    return _navScreenGeneric(context, (context) => HomeScreen());
   }
 
   /// Shows the detail screen.
   toDetailScreen(BuildContext context) {
     // TODO:
-    // _showGeneric(context, (context) => HomeScreen());
+    // return _showGeneric(context, (context) => HomeScreen());
   }
 
   /// Shows the recording process's category selection page.
   toRecordCategoryPage(BuildContext context) {
-    _navPageGeneric(context, (context) => RecordCategoryPage());
+    return _navPageGeneric(context, (context) => RecordCategoryPage());
   }
 
   /// Shows the recording process's item selection page.
   toRecordItemPage(BuildContext context, Category category) {
-    _navPageGeneric(context, (context) => RecordItemPage(category: category));
+    return _navPageGeneric(context, (context) => RecordItemPage(category: category));
   }
 
   /// Shows the recording process's tag selection page.
   toRecordTagPage(BuildContext context, Category category, Item item) {
-    _navPageGeneric(context, (context) => RecordTagPage(category: category, item: item));
+    return _navPageGeneric(context, (context) => RecordTagPage(category: category, item: item));
   }
 
   /// Shows the recording process's price submission page.
   toRecordPricePage(BuildContext context, Item item, List<Tag> tags) {
-    _navPageGeneric(context, (context) => RecordPricePage(item: item, tags: tags));
+    return _navPageGeneric(context, (context) => RecordPricePage(item: item, tags: tags));
   }
 
   /// Shows the next screen with generic behavior using the specified builder.
   _navScreenGeneric(BuildContext context, WidgetBuilder builder) {
-    Navigator.of(context).pushAndRemoveUntil(
+    return Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: builder),
       (route) => false,
     );
@@ -57,7 +57,7 @@ class AppNavigation {
 
   /// Shows the next page with generic behavior using the specified builder.
   _navPageGeneric(BuildContext context, WidgetBuilder builder) {
-    Navigator.of(context).push(
+    return Navigator.of(context).push(
       MaterialPageRoute(builder: builder),
     );
   }
