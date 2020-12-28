@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_tracker/modules/api/BaseApi.dart';
+import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 
-class CreateRecordApi extends BaseApi<Record> {
-
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class CreateRecordApi extends BaseFirestoreApi<Record> {
 
   String uid;
   String itemId;

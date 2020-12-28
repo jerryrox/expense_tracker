@@ -1,11 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_tracker/modules/api/BaseApi.dart';
+import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 
-class CreateCategoryApi extends BaseApi<Category> {
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
+class CreateCategoryApi extends BaseFirestoreApi<Category> {
   String uid;
   int color;
   String name;
