@@ -1,3 +1,4 @@
+import 'package:expense_tracker/modules/api/createUserData/CreateUserDataApi.dart';
 import 'package:expense_tracker/modules/api/login/AnonymousLoginApi.dart';
 import 'package:expense_tracker/modules/api/login/BaseLoginApi.dart';
 import 'package:expense_tracker/modules/api/login/GoogleLoginApi.dart';
@@ -12,7 +13,6 @@ import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/RoundedButton.dart';
 import 'package:expense_tracker/ui/navigations/popups/SelectionDialogPopup.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -130,6 +130,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, Loade
       if (user == null) {
         throw "Failed retrieving user data.";
       }
+
+      await CreateUserDataApi(user.uid).request();
+
       userState.user.value = user;
       appNavigation.toHomeScreen(context);
     } catch (e) {

@@ -44,6 +44,7 @@ class ExpenseChart extends StatelessWidget {
         chartRadius: constraints.maxWidth / 2,
         colorList: getColors(),
         chartType: ChartType.disc,
+        initialAngleInDegree: -90,
         legendOptions: LegendOptions(
           showLegends: showLegends,
         ),
