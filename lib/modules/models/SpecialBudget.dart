@@ -1,17 +1,14 @@
-class SpecialBudget {
+import 'package:expense_tracker/modules/models/Budget.dart';
+import 'package:expense_tracker/modules/models/DateRange.dart';
+
+class SpecialBudget extends Budget {
   String id;
-  /// The inclusive date from which the budget applies.
-  DateTime start;
-  /// The exclusive date to which the budget applies.
-  DateTime end;
-  /// The amount of budget available for this week.
+  DateRange range;
+  /// The amount of budget available for the time frame.
   double budget;
 
-  /// Returns the number of days the special budget lasts for.
-  int get days => end.difference(start).inDays;
+  @override
+  int get days => range.days;
 
-  /// Returns the amount of budget per day.
-  double get budgetPerDay => budget / days.toDouble();
-
-  SpecialBudget({this.id, this.start, this.end, this.budget});
+  SpecialBudget({this.id, this.range, this.budget}) : super(budget);
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
+import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/SpecialBudget.dart';
 
 class GetSpecialBudgetsApi extends BaseFirestoreApi<List<SpecialBudget>> {
@@ -29,8 +30,10 @@ class GetSpecialBudgetsApi extends BaseFirestoreApi<List<SpecialBudget>> {
       final data = e.data();
       return SpecialBudget(
         id: e.id,
-        start: (data["start"] as Timestamp).toDate(),
-        end: (data["end"] as Timestamp).toDate(),
+        range: DateRange.withMinMax(
+          (data["start"] as Timestamp).toDate(),
+          (data["end"] as Timestamp).toDate(),
+        ),
         budget: data["budget"] as double,
       );
     }));
