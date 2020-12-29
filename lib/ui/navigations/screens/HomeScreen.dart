@@ -2,6 +2,7 @@ import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart'
 import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
 import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
+import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
 import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
@@ -12,6 +13,7 @@ import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
+import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
 import 'package:expense_tracker/modules/models/static/RecordGroupMaker.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
@@ -43,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
+  BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
 
   @override
   void initState() {
@@ -50,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
     afterFrameRender(() {
       loadData();
+      loadBudget();
     });
   }
 
@@ -64,6 +68,23 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
       setState(() {
         this.recordGroups = RecordGroupMaker.make(categories, items, records);
       });
+    } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+
+    loader.remove();
+  }
+
+  /// Loads the budget data from the server.
+  Future loadBudget() async {
+    final loader = showLoader(context);
+
+    try {
+      await Future.wait([
+        budgetState.loadBudget(userState.uid),
+        budgetState.loadSpecialBudgets(userState.uid),
+      ]);
+      setState(() {});
     } catch (e) {
       showSnackbar(context, e.toString());
     }
@@ -96,6 +117,15 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
       usage += group.totalAmount;
     }
     return usage;
+  }
+
+  /// Returns the budget of the current date range.
+  double getBudget() {
+    return BudgetCalculator.getTotalBudget(
+      budgetState.defaultBudget,
+      budgetState.specialBudgets,
+      DateRange.withDateRange(DateTime.now().toUtc(), dateRangeType),
+    );
   }
 
   /// Returns the data for the chart to display.
@@ -139,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
                         TotalSpentDisplay(
                           dateRangeType: dateRangeType,
                           amount: getTotalUsage(),
+                          budget: getBudget(),
                         ),
                         SizedBox(height: 20),
                         ConstrainedBox(
