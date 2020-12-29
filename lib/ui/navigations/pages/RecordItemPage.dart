@@ -39,9 +39,6 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
   /// Returns the category currently in context.
   Category get category => widget.category;
 
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
-
   /// Returns whether the search value is currently non-empty.
   bool get hasSearchValue => searchValue.trim().isNotEmpty;
 
@@ -59,7 +56,7 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
     final loader = showLoader(context);
 
     try {
-      final api = GetItemsApi(uid).forCategory(category.id);
+      final api = GetItemsApi(userState.uid).forCategory(category.id);
       final items = await api.request();
       setState(() => this.items = items);
       applyFilter();
@@ -81,7 +78,7 @@ class _RecordItemPageState extends State<RecordItemPage> with UtilMixin, Snackba
         throw "Please enter a valid name.";
       }
 
-      final api = CreateItemApi(uid, category.id, name);
+      final api = CreateItemApi(userState.uid, category.id, name);
       final item = await api.request();
       items.add(item);
       applyFilter();

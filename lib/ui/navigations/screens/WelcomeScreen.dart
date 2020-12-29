@@ -133,7 +133,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SnackbarMixin, Loade
 
       await CreateUserDataApi(user.uid).request();
 
-      userState.user.value = user;
+      userState.user = user;
       appNavigation.toHomeScreen(context);
     } catch (e) {
       showSnackbar(context, e.toString());

@@ -35,9 +35,6 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
 
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
-
   @override
   void initState() {
     super.initState();
@@ -73,7 +70,7 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
         throw "Please enter a valid name.";
       }
 
-      final api = CreateCategoryApi(uid, color.value, name);
+      final api = CreateCategoryApi(userState.uid, color.value, name);
       final category = await api.request();
       closePopup(category);
     } catch (e) {

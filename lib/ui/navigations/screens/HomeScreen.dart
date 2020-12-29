@@ -44,9 +44,6 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
 
-  /// Returns the uid of the current online user.
-  String get uid => userState.user.value.uid;
-
   @override
   void initState() {
     super.initState();
@@ -192,18 +189,18 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   /// Returns a future which loads all categories in the db.
   Future<List<Category>> _retrieveCategories() {
-    return GetCategoriesApi(uid).request();
+    return GetCategoriesApi(userState.uid).request();
   }
 
   /// Returns a future which loads all items in the db.
   Future<List<Item>> _retrieveItems() {
-    return GetItemsApi(uid).request();
+    return GetItemsApi(userState.uid).request();
   }
 
   /// Returns a future which loads all records matching the current state from the db.
   Future<List<Record>> _retrieveRecords() {
     final range = DateRange.withDateRange(DateTime.now(), dateRangeType);
-    return GetRecordsApi(uid).afterDate(range.min).beforeDate(range.max).request();
+    return GetRecordsApi(userState.uid).afterDate(range.min).beforeDate(range.max).request();
   }
 
   /// Event called on selecting a date range type.

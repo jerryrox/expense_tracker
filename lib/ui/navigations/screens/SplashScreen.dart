@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> with UtilMixin {
     try {
       final user = await AutoLoginApi().request();
 
-      userState.user.value = user;
+      userState.user = user;
       return user != null;
     }
     catch(e) {

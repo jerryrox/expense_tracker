@@ -45,7 +45,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     final loader = showLoader(context);
 
     try {
-      final categories = await GetCategoriesApi(userState.user.value.uid).request();
+      final categories = await GetCategoriesApi(userState.uid).request();
       setState(() => this.categories = categories);
       filterCategories();
     } catch (e) {

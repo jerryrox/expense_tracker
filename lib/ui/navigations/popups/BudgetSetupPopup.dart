@@ -45,7 +45,7 @@ class _BudgetSetupPopupState extends State<BudgetSetupPopup> with SnackbarMixin,
     try {
       budgetState.loadBudget(userState.uid);
       setState(() {
-        final totalBudget = budgetState.defaultBudget.value?.totalBudget ?? 0;
+        final totalBudget = budgetState.defaultBudget.totalBudget;
         inputController.text = totalBudget.toStringAsFixed(2);
         budget.totalBudget = totalBudget;
       });

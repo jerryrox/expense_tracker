@@ -23,16 +23,13 @@ class _SettingsScreenState extends State<SettingsScreen> with SnackbarMixin {
   UserState get userState => Provider.of<UserState>(context, listen: false);
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
-  /// Returns the current user instance.
-  User get user => userState.user.value;
-
   /// Logs out the current user.
   Future logOut() async {
     try {
       final api = LogoutApi();
       await api.request();
 
-      userState.user.value = null;
+      userState.user = null;
       appNavigation.toWelcomeScreen(context);
     } catch (e) {
       showSnackbar(context, e.toString());

@@ -34,9 +34,6 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
 
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
-
   /// Returns the item currently selected
   Item get item => widget.item;
 
@@ -49,7 +46,7 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
 
     try {
       final api = CreateRecordApi(
-        uid,
+        userState.uid,
         item.id,
         price,
         tags.map((e) => e.id).toList(),

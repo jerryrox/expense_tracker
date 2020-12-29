@@ -31,6 +31,7 @@ class BudgetScreen extends StatefulWidget {
 
 class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMixin, LoaderMixin, DialogMixin {
   List<Record> records = [];
+  bool isDataCached = false;
   Map<DateRangeType, double> totalBudgets = {};
   Map<DateRangeType, double> totalSpends = {};
 
@@ -70,7 +71,7 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
     try {
       final newBudget = await showDialogDefault<DefaultBudget>(context, BudgetSetupPopup());
       if(newBudget != null) {
-        setState(() => budgetState.defaultBudget.value = newBudget);
+        setState(() => budgetState.defaultBudget = newBudget);
         _cacheTotalBudgetAndSpends();
       }
     } catch (e) {
@@ -148,6 +149,10 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Draws the content for when the user has a budget set up.
   Widget _drawBudgetContent() {
+    if(!isDataCached) {
+      return Container();
+    }
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,11 +232,12 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
           records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
         );
         totalBudgets[type] = BudgetCalculator.getTotalBudget(
-          budgetState.defaultBudget.value,
-          budgetState.specialBudgets.value,
+          budgetState.defaultBudget,
+          budgetState.specialBudgets,
           dateRange,
         );
       }
+      setState(() => isDataCached = true);
     }
   }
 

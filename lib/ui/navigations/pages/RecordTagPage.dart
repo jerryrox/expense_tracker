@@ -42,9 +42,6 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
   UserState get userState => Provider.of<UserState>(context, listen: false);
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
-
   /// Returns the current category in context.
   Category get category => widget.category;
 
@@ -65,7 +62,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
     final loader = showLoader(context);
 
     try {
-      final api = GetTagsApi(uid).forCategory(category.id);
+      final api = GetTagsApi(userState.uid).forCategory(category.id);
       final tags = await api.request();
       setState(() => this.tags = tags);
       applyFilter();
@@ -87,7 +84,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
         throw "Please enter a valid name.";
       }
 
-      final api = CreateTagApi(uid, category.id, name);
+      final api = CreateTagApi(userState.uid, category.id, name);
       final tag = await api.request();
       setState(() => tags.add(tag));
       applyFilter();

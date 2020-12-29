@@ -1,18 +1,16 @@
-import 'package:expense_tracker/modules/models/Bindable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class UserState {
 
-  final Bindable<User> user = Bindable(null);
+  User user = null;
 
 
   /// Returns the uid of the current user.
-  String get uid => user.value.uid;
+  String get uid => user.uid;
 
 
   /// Returns the string value which describes the user's identity.
   String getUserIdentity() {
-    final user = this.user.value;
     if(user == null) {
       return "Offline User";
     }
