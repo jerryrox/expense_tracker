@@ -22,8 +22,11 @@ class GetSpecialBudgetsApi extends BaseFirestoreApi<List<SpecialBudget>> {
   }
 
   Future<List<SpecialBudget>> request() async {
-    final collection = firestore.collection(CollectionNames.getSpecialBudgetPath(uid));
-    final result = await collection.get();
+    Query query = firestore.collection(CollectionNames.getSpecialBudgetPath(uid));
+    if(from != null) {
+      query = query.where("end", isGreaterThan: Timestamp.fromDate(from));
+    }
+    final result = await query.get();
 
     List<SpecialBudget> budgets = [];
     budgets.addAll(result.docs.map((e) {

@@ -38,6 +38,6 @@ class CollectionNames {
 
   /// Returns the path of a collection or document for a user's special budget.
   static String getSpecialBudgetPath(String uid, {String id}) {
-    return PathUtils.combineSegments([getUserPath(uid: uid), records, id], leadSlash: false);
+    return PathUtils.combineSegments([getUserPath(uid: uid), specialBudgets, id], leadSlash: false);
   }
 }

@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   /// Returns a future which loads all records matching the current state from the db.
   Future<List<Record>> _retrieveRecords() {
-    final range = DateRange(DateTime.now(), dateRangeType);
+    final range = DateRange.withDateRange(DateTime.now(), dateRangeType);
     return GetRecordsApi(uid).afterDate(range.min).beforeDate(range.max).request();
   }
 

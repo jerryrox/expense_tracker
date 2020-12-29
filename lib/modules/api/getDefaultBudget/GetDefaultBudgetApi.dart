@@ -11,6 +11,8 @@ class GetDefaultBudgetApi extends BaseFirestoreApi<DefaultBudget> {
   Future<DefaultBudget> request() async {
     final doc = firestore.doc(CollectionNames.getUserPath(uid: uid));
     final data = await doc.get();
-    return DefaultBudget((data["defaultBudget"] as double) ?? 0);
+    if(data.exists)
+      return DefaultBudget((data.data()["defaultBudget"] as double) ?? 0);
+    return null;
   }
 }

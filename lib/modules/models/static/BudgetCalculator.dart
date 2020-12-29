@@ -4,14 +4,10 @@ import 'package:expense_tracker/modules/models/SpecialBudget.dart';
 
 class BudgetCalculator {
 
-  DefaultBudget defaultBudget;
-  List<SpecialBudget> specialBudgets;
-  DateRange range;
-
-  BudgetCalculator(this.defaultBudget, this.specialBudgets, this.range);
+  BudgetCalculator._();
 
   /// Returns the total budget within the range.
-  double getTotalBudget() {
+  static double getTotalBudget(DefaultBudget defaultBudget, List<SpecialBudget> specialBudgets, DateRange range) {
     int days = range.days;
     double amount = 0;
     for(final special in specialBudgets) {

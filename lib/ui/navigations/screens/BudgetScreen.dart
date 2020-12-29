@@ -1,11 +1,17 @@
-import 'package:expense_tracker/modules/api/getBaseBudget/GetBaseBudgetApi.dart';
+import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
 import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
+import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
+import 'package:expense_tracker/modules/models/DateRange.dart';
+import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
+import 'package:expense_tracker/modules/models/Record.dart';
+import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
+import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
@@ -21,42 +27,74 @@ class BudgetScreen extends StatefulWidget {
 }
 
 class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMixin, LoaderMixin {
+  List<Record> records = [];
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
   BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
-
-  /// Returns whether there is a budget set up by the user.
-  bool get hasBudget => false;
 
   @override
   void initState() {
     super.initState();
 
     afterFrameRender(() {
-      loadBudget();
+      loadBudgetData();
     });
   }
 
   /// Loads budget data from server.
-  Future loadBudget() async {
+  Future loadBudgetData() async {
+    final loader = showLoader(context);
+
     try {
-      final api = GetBaseBudgetApi(userState.uid);
-      final baseBudget = await api.request();
-      setState(() => budgetState.baseBudget.value = baseBudget);
-    }
-    catch(e) {
+      await Future.wait([
+        budgetState.loadBudget(userState.uid),
+        budgetState.loadSpecialBudgets(userState.uid),
+        _loadRecords(),
+      ]);
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
+
+    loader.remove();
   }
 
   /// Starts a new budget set up process for the user.
   Future setupBudget() async {
     try {
       // TODO: Show BudgetSetupPopup
-    }
-    catch(e) {
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
+  }
+
+  /// Returns the chart data for the specified range type.
+  List<ExpenseChartData> getChartData(DateRangeType rangeType) {
+    final dateRange = DateRange.withDateRange(DateTime.now().toUtc(), rangeType);
+    double totalSpent = _getTotalSpent(
+      records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
+    );
+    double totalBudget = BudgetCalculator.getTotalBudget(
+      budgetState.defaultBudget.value,
+      budgetState.specialBudgets.value,
+      dateRange,
+    );
+
+    List<ExpenseChartData> chartData = [];
+    if(totalSpent < totalBudget) {
+      chartData.add(ExpenseChartData(
+        label: "Remaining",
+        color: Theme.of(context).primaryColor,
+        value: totalBudget - totalSpent,
+      ));
+    }
+    if(totalSpent > 0) {
+      chartData.add(ExpenseChartData(
+        label: "Used",
+        color: Theme.of(context).errorColor,
+        value: totalSpent,
+      ));
+    }
+    return chartData;
   }
 
   @override
@@ -67,15 +105,16 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
       ),
       body: SafeArea(
         child: FilledBox(
-          child: ContentPadding(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TitleText("Budget"),
-                Expanded(
-                  child: hasBudget ? _drawBudgetContent() : _drawNoBudgetContent(),
-                ),
-              ],
+          child: SingleChildScrollView(
+            child: ContentPadding(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TitleText("Budget"),
+                  budgetState.isBudgetSetup ? _drawBudgetContent() : _drawNoBudgetContent(),
+                ],
+              ),
             ),
           ),
         ),
@@ -87,6 +126,7 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
   Widget _drawNoBudgetContent() {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text("There is no budget set up."),
         SizedBox(height: 10),
@@ -104,7 +144,73 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
   }
 
   /// Draws the content for when the user has a budget set up.
-  Widget _drawBudgetContent() {}
+  Widget _drawBudgetContent() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          "Weekly budget",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: ExpenseChart(
+            data: getChartData(DateRangeType.week),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          "Monthly budget",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: ExpenseChart(
+            data: getChartData(DateRangeType.month),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          "Yearly budget",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: 400),
+          child: ExpenseChart(
+            data: getChartData(DateRangeType.year),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Loads the list of records and assigns to state.
+  /// May throw an error.
+  Future _loadRecords() async {
+    final afterDate = DateTime.utc(DateTime.now().toUtc().year);
+    final api = GetRecordsApi(userState.uid).afterDate(afterDate);
+    final records = await api.request();
+    setState(() => this.records = records);
+  }
+
+  /// Returns the total amount spent for the specified records.
+  double _getTotalSpent(Iterable<Record> records) {
+    double amount = 0;
+    for (final record in records) {
+      amount += record.price;
+    }
+    return amount;
+  }
 
   /// Event called when the budget setup button was clicked.
   void _onSetupBudgetButton() {
