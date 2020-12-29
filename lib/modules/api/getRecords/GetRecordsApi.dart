@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
+import 'package:expense_tracker/modules/models/static/DynamicUtils.dart';
 
 class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
 
@@ -49,7 +50,7 @@ class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
         id: e.id,
         date: (data["date"] as Timestamp).toDate(),
         itemId: data["itemId"] as String,
-        price: data["price"] as double,
+        price: DynamicUtils.getDouble(data["price"]),
         tagIds: List.from(data["tagIds"] as Iterable<dynamic>),
       );
     }).toList();

@@ -3,6 +3,7 @@ import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/SpecialBudget.dart';
+import 'package:expense_tracker/modules/models/static/DynamicUtils.dart';
 
 class GetSpecialBudgetsApi extends BaseFirestoreApi<List<SpecialBudget>> {
   String uid;
@@ -37,7 +38,7 @@ class GetSpecialBudgetsApi extends BaseFirestoreApi<List<SpecialBudget>> {
           (data["start"] as Timestamp).toDate(),
           (data["end"] as Timestamp).toDate(),
         ),
-        budget: data["budget"] as double,
+        budget: DynamicUtils.getDouble(data["budget"]),
       );
     }));
     return budgets;
