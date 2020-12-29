@@ -8,7 +8,6 @@ import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -44,25 +43,21 @@ class _SettingsScreenState extends State<SettingsScreen> with SnackbarMixin {
       ),
       body: SafeArea(
         child: FilledBox(
-          child: ContentPadding(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                TitleText("Settings"),
-                Text("Signed in as ${userState.getUserIdentity()}"),
-                SizedBox(height: 10),
-                Expanded(
-                  child: ListView(
-                    children: [
-                      ListTile(
-                        leading: Icon(IconAtlas.logout),
-                        title: Text("Log out"),
-                        onTap: _onLogoutButton,
-                      ),
-                    ],
+          child: SingleChildScrollView(
+            child: ContentPadding(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TitleText("Settings"),
+                  Text("Signed in as ${userState.getUserIdentity()}"),
+                  SizedBox(height: 10),
+                  ListTile(
+                    leading: Icon(IconAtlas.logout),
+                    title: Text("Log out"),
+                    onTap: _onLogoutButton,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
