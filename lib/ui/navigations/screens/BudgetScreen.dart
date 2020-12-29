@@ -28,6 +28,8 @@ class BudgetScreen extends StatefulWidget {
 
 class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMixin, LoaderMixin {
   List<Record> records = [];
+  Map<DateRangeType, double> totalBudgets = {};
+  Map<DateRangeType, double> totalSpends = {};
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
   BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
@@ -51,6 +53,7 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
         budgetState.loadSpecialBudgets(userState.uid),
         _loadRecords(),
       ]);
+      _cacheTotalBudgetAndSpends();
     } catch (e) {
       showSnackbar(context, e.toString());
     }
@@ -69,16 +72,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Returns the chart data for the specified range type.
   List<ExpenseChartData> getChartData(DateRangeType rangeType) {
-    final dateRange = DateRange.withDateRange(DateTime.now().toUtc(), rangeType);
-    double totalSpent = _getTotalSpent(
-      records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
-    );
-    double totalBudget = BudgetCalculator.getTotalBudget(
-      budgetState.defaultBudget.value,
-      budgetState.specialBudgets.value,
-      dateRange,
-    );
-
+    double totalSpent = totalSpends[rangeType];
+    double totalBudget = totalBudgets[rangeType];
     List<ExpenseChartData> chartData = [];
     if(totalSpent < totalBudget) {
       chartData.add(ExpenseChartData(
@@ -156,13 +151,14 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
             fontSize: 17,
           ),
         ),
+        Text("Total: ${totalSpends[DateRangeType.week].toStringAsFixed(2)}"),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: ExpenseChart(
             data: getChartData(DateRangeType.week),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 30),
         Text(
           "Monthly budget",
           style: TextStyle(
@@ -170,13 +166,14 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
             fontSize: 17,
           ),
         ),
+        Text("Total: ${totalSpends[DateRangeType.month].toStringAsFixed(2)}"),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: ExpenseChart(
             data: getChartData(DateRangeType.month),
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 30),
         Text(
           "Yearly budget",
           style: TextStyle(
@@ -184,6 +181,7 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
             fontSize: 17,
           ),
         ),
+        Text("Total: ${totalSpends[DateRangeType.year].toStringAsFixed(2)}"),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: ExpenseChart(
@@ -210,6 +208,23 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
       amount += record.price;
     }
     return amount;
+  }
+
+  /// Calculates the total budget and spends for each date range type.
+  void _cacheTotalBudgetAndSpends() {
+    if(budgetState.isBudgetSetup) {
+      for(final type in DateRangeType.values) {
+        final dateRange = DateRange.withDateRange(DateTime.now().toUtc(), type);
+        totalSpends[type] = _getTotalSpent(
+          records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
+        );
+        totalBudgets[type] = BudgetCalculator.getTotalBudget(
+          budgetState.defaultBudget.value,
+          budgetState.specialBudgets.value,
+          dateRange,
+        );
+      }
+    }
   }
 
   /// Event called when the budget setup button was clicked.
