@@ -18,6 +18,7 @@ import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
+import 'package:expense_tracker/ui/components/primitives/SectionText.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/navigations/popups/BudgetSetupPopup.dart';
@@ -174,12 +175,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
+        SectionText(
           "Weekly budget (\$${totalBudgets[DateRangeType.week].toStringAsFixed(2)})",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
@@ -189,12 +186,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
           ),
         ),
         SizedBox(height: 30),
-        Text(
+        SectionText(
           "Monthly budget (\$${totalBudgets[DateRangeType.month].toStringAsFixed(2)})",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
@@ -204,12 +197,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
           ),
         ),
         SizedBox(height: 30),
-        Text(
+        SectionText(
           "Yearly budget (\$${totalBudgets[DateRangeType.year].toStringAsFixed(2)})",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
