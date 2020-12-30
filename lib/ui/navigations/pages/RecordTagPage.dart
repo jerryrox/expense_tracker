@@ -1,7 +1,7 @@
 import 'package:expense_tracker/modules/api/createTag/CreateTagApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
@@ -9,6 +9,7 @@ import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
+import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
@@ -41,9 +42,6 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
   UserState get userState => Provider.of<UserState>(context, listen: false);
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
 
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
-
   /// Returns the current category in context.
   Category get category => widget.category;
 
@@ -64,7 +62,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
     final loader = showLoader(context);
 
     try {
-      final api = GetTagsApi(uid).forCategory(category.id);
+      final api = GetTagsApi(userState.uid).forCategory(category.id);
       final tags = await api.request();
       setState(() => this.tags = tags);
       applyFilter();
@@ -86,7 +84,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
         throw "Please enter a valid name.";
       }
 
-      final api = CreateTagApi(uid, category.id, name);
+      final api = CreateTagApi(userState.uid, category.id, name);
       final tag = await api.request();
       setState(() => tags.add(tag));
       applyFilter();
@@ -178,10 +176,7 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
                   ),
                 ),
                 BottomContentPadding(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 300,
-                    ),
+                  child: ButtonWidthConstraint(
                     child: TextRoundedButton(
                       selectedTags.isEmpty ? "Skip" : "Next",
                       isFullWidth: true,

@@ -1,6 +1,6 @@
 import 'package:expense_tracker/modules/api/deleteRecord/DeleteRecordApi.dart';
 import 'package:expense_tracker/modules/api/getTags/GetTagsApi.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
@@ -44,9 +44,6 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
   /// Returns the total amount spent.
   double get totalAmount => widget.recordGroup.totalAmount;
 
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
-
   @override
   void initState() {
     super.initState();
@@ -62,7 +59,7 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
     final loader = showLoader(context);
 
     try {
-      final api = GetTagsApi(uid).forCategory(category.id);
+      final api = GetTagsApi(userState.uid).forCategory(category.id);
       final tags = await api.request();
       setState(() => this.tags = tags);
     } catch (e) {
@@ -90,7 +87,7 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
     final loader = showLoader(context);
 
     try {
-      final api = DeleteRecordApi(uid, record.id);
+      final api = DeleteRecordApi(userState.uid, record.id);
       await api.request();
       _removeRecord(record);
     }

@@ -1,6 +1,6 @@
 import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
@@ -45,7 +45,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     final loader = showLoader(context);
 
     try {
-      final categories = await GetCategoriesApi(userState.user.value.uid).request();
+      final categories = await GetCategoriesApi(userState.uid).request();
       setState(() => this.categories = categories);
       filterCategories();
     } catch (e) {

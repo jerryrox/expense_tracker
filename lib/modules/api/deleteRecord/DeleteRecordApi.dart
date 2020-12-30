@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_tracker/modules/api/BaseApi.dart';
+import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 
-class DeleteRecordApi extends BaseApi {
-
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class DeleteRecordApi extends BaseFirestoreApi {
 
   String uid;
   String recordId;

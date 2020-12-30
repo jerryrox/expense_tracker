@@ -15,4 +15,9 @@ class MathUtils {
   static double randomDouble(double min, double max) {
     return _random.nextDouble() * (max - min) + min;
   }
+
+  /// Returns the absolute value of the specified value.
+  static double abs(double value) {
+    return value < 0 ? -value : value;
+  }
 }

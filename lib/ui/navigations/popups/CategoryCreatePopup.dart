@@ -1,5 +1,5 @@
 import 'package:expense_tracker/modules/api/createCategory/CreateCategoryApi.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
@@ -7,8 +7,6 @@ import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/static/MathUtils.dart';
 import 'package:expense_tracker/ui/components/primitives/ColorButton.dart';
-import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
-import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/navigations/popups/ColorPickerPopup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,9 +32,6 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
   TextEditingController inputController = TextEditingController();
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
-
-  /// Returns the uid of the current user.
-  String get uid => userState.user.value.uid;
 
   @override
   void initState() {
@@ -73,7 +68,7 @@ class _CategoryCreatePopupState extends State<CategoryCreatePopup> with UtilMixi
         throw "Please enter a valid name.";
       }
 
-      final api = CreateCategoryApi(uid, color.value, name);
+      final api = CreateCategoryApi(userState.uid, color.value, name);
       final category = await api.request();
       closePopup(category);
     } catch (e) {

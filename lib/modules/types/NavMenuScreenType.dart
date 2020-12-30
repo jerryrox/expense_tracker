@@ -1,6 +1,6 @@
 enum NavMenuScreenType {
   home,
-  detail,
+  budget,
   statistics,
   settings
 }

@@ -1,18 +1,22 @@
+import 'package:expense_tracker/modules/models/static/MathUtils.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:flutter/material.dart';
 
 class TotalSpentDisplay extends StatelessWidget {
   final DateRangeType dateRangeType;
   final double amount;
+  final double budget;
 
   TotalSpentDisplay({
     Key key,
     this.dateRangeType,
     this.amount = 0,
+    this.budget,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -28,6 +32,31 @@ class TotalSpentDisplay extends StatelessWidget {
           style: TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+          ),
+        ),
+        _drawBudgetInfo(theme),
+      ],
+    );
+  }
+
+  /// Draws additional widgets to display budget information.
+  Widget _drawBudgetInfo(ThemeData theme) {
+    if(budget == null) {
+      return Container();
+    }
+
+    final isOverused = amount > budget;
+    final diff = MathUtils.abs(budget - amount);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        SizedBox(height: 5),
+        Text("Budget: \$${budget.toStringAsFixed(2)}"),
+        Text(
+          isOverused ? "Overused: \$${diff.toStringAsFixed(2)}" : "Remaining: \$${diff.toStringAsFixed(2)}",
+          style: TextStyle(
+            color: isOverused ? theme.errorColor : theme.primaryColor,
+            fontSize: 14,
           ),
         ),
       ],

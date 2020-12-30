@@ -4,6 +4,7 @@ import 'package:pie_chart/pie_chart.dart';
 
 class ExpenseChart extends StatelessWidget {
   final List<ExpenseChartData> data;
+  final bool showLegends;
 
   /// Returns whether the chart data is not empty.
   bool get hasData => data != null && data.isNotEmpty;
@@ -11,6 +12,7 @@ class ExpenseChart extends StatelessWidget {
   ExpenseChart({
     Key key,
     this.data,
+    this.showLegends = false,
   }) : super(key: key);
 
   List<Color> getColors() {
@@ -42,8 +44,9 @@ class ExpenseChart extends StatelessWidget {
         chartRadius: constraints.maxWidth / 2,
         colorList: getColors(),
         chartType: ChartType.disc,
+        initialAngleInDegree: -90,
         legendOptions: LegendOptions(
-          showLegends: false,
+          showLegends: showLegends,
         ),
         chartValuesOptions: ChartValuesOptions(
           showChartValueBackground: false,

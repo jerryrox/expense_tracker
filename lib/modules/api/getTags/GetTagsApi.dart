@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expense_tracker/modules/api/BaseApi.dart';
+import 'package:expense_tracker/modules/api/BaseFirestoreApi.dart';
 import 'package:expense_tracker/modules/api/CollectionNames.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 
-class GetTagsApi extends BaseApi<List<Tag>> {
-
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+class GetTagsApi extends BaseFirestoreApi<List<Tag>> {
 
   String uid;
   String categoryId;

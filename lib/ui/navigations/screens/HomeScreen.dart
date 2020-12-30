@@ -2,7 +2,8 @@ import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart'
 import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
 import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
-import 'package:expense_tracker/modules/dependencies/states/UserState.dart';
+import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
+import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
@@ -12,12 +13,14 @@ import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
+import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
 import 'package:expense_tracker/modules/models/static/RecordGroupMaker.dart';
 import 'package:expense_tracker/modules/themes/IconAtlas.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ButtonGroup.dart';
+import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
@@ -42,9 +45,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
-
-  /// Returns the uid of the current online user.
-  String get uid => userState.user.value.uid;
+  BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
     afterFrameRender(() {
       loadData();
+      loadBudget();
     });
   }
 
@@ -66,6 +68,23 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
       setState(() {
         this.recordGroups = RecordGroupMaker.make(categories, items, records);
       });
+    } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+
+    loader.remove();
+  }
+
+  /// Loads the budget data from the server.
+  Future loadBudget() async {
+    final loader = showLoader(context);
+
+    try {
+      await Future.wait([
+        budgetState.loadBudget(userState.uid),
+        budgetState.loadSpecialBudgets(userState.uid),
+      ]);
+      setState(() {});
     } catch (e) {
       showSnackbar(context, e.toString());
     }
@@ -98,6 +117,15 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
       usage += group.totalAmount;
     }
     return usage;
+  }
+
+  /// Returns the budget of the current date range.
+  double getBudget() {
+    return BudgetCalculator.getTotalBudget(
+      budgetState.defaultBudget,
+      budgetState.specialBudgets,
+      DateRange.withDateRange(DateTime.now().toUtc(), dateRangeType),
+    );
   }
 
   /// Returns the data for the chart to display.
@@ -141,6 +169,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
                         TotalSpentDisplay(
                           dateRangeType: dateRangeType,
                           amount: getTotalUsage(),
+                          budget: getBudget(),
                         ),
                         SizedBox(height: 20),
                         ConstrainedBox(
@@ -165,10 +194,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
               ),
               BottomContentPadding(
                 child: ContentPadding(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: 300,
-                    ),
+                  child: ButtonWidthConstraint(
                     child: RoundedButton(
                       isFullWidth: true,
                       onClick: _onRecordButton,
@@ -194,18 +220,18 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
   /// Returns a future which loads all categories in the db.
   Future<List<Category>> _retrieveCategories() {
-    return GetCategoriesApi(uid).request();
+    return GetCategoriesApi(userState.uid).request();
   }
 
   /// Returns a future which loads all items in the db.
   Future<List<Item>> _retrieveItems() {
-    return GetItemsApi(uid).request();
+    return GetItemsApi(userState.uid).request();
   }
 
   /// Returns a future which loads all records matching the current state from the db.
   Future<List<Record>> _retrieveRecords() {
-    final range = DateRange(DateTime.now(), dateRangeType);
-    return GetRecordsApi(uid).afterDate(range.min).beforeDate(range.max).request();
+    final range = DateRange.withDateRange(DateTime.now(), dateRangeType);
+    return GetRecordsApi(userState.uid).afterDate(range.min).beforeDate(range.max).request();
   }
 
   /// Event called on selecting a date range type.
