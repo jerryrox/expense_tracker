@@ -27,7 +27,7 @@ class TextRoundedButton extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          color: theme.scaffoldBackgroundColor,
+          color: isOutlined ? theme.primaryColor : theme.scaffoldBackgroundColor,
         ),
       ),
     );

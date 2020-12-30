@@ -6,12 +6,14 @@ import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/DefaultBudget.dart';
+import 'package:expense_tracker/modules/models/SpecialBudget.dart';
 import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
 import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
+import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
@@ -70,11 +72,26 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
   Future setupBudget() async {
     try {
       final newBudget = await showDialogDefault<DefaultBudget>(context, BudgetSetupPopup());
-      if(newBudget != null) {
+      if (newBudget != null) {
         setState(() => budgetState.defaultBudget = newBudget);
         _cacheTotalBudgetAndSpends();
       }
     } catch (e) {
+      showSnackbar(context, e.toString());
+    }
+  }
+
+  /// Starts a new special budget set up process for the user.
+  Future setupSpecials() async {
+    try {
+      // TODO: Show dialog for special budgets
+      List<SpecialBudget> budgets;
+      if(budgets != null) {
+        setState(() => budgetState.specialBudgets = budgets);
+        _cacheTotalBudgetAndSpends();
+      }
+    }
+    catch(e) {
       showSnackbar(context, e.toString());
     }
   }
@@ -84,14 +101,14 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
     double totalSpent = totalSpends[rangeType];
     double totalBudget = totalBudgets[rangeType];
     List<ExpenseChartData> chartData = [];
-    if(totalSpent > 0) {
+    if (totalSpent > 0) {
       chartData.add(ExpenseChartData(
         label: "Used",
         color: Theme.of(context).errorColor,
         value: totalSpent,
       ));
     }
-    if(totalSpent < totalBudget) {
+    if (totalSpent < totalBudget) {
       chartData.add(ExpenseChartData(
         label: "Remaining",
         color: Theme.of(context).primaryColor,
@@ -149,7 +166,7 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Draws the content for when the user has a budget set up.
   Widget _drawBudgetContent() {
-    if(!isDataCached) {
+    if (!isDataCached) {
       return Container();
     }
 
@@ -201,6 +218,24 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
             showLegends: true,
           ),
         ),
+        SizedBox(height: 30),
+        ButtonWidthConstraint(
+          child: TextRoundedButton(
+            "Set special budgets",
+            isFullWidth: true,
+            onClick: _onSpecialBudgetButton,
+          ),
+        ),
+        SizedBox(height: 10),
+        ButtonWidthConstraint(
+          child: TextRoundedButton(
+            "Change default budget",
+            isFullWidth: true,
+            isOutlined: true,
+            onClick: _onChangeBudgetButton,
+          ),
+        ),
+        SizedBox(height: 40),
       ],
     );
   }
@@ -225,8 +260,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Calculates the total budget and spends for each date range type.
   void _cacheTotalBudgetAndSpends() {
-    if(budgetState.isBudgetSetup) {
-      for(final type in DateRangeType.values) {
+    if (budgetState.isBudgetSetup) {
+      for (final type in DateRangeType.values) {
         final dateRange = DateRange.withDateRange(DateTime.now().toUtc(), type);
         totalSpends[type] = _getTotalSpent(
           records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
@@ -243,6 +278,16 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Event called when the budget setup button was clicked.
   void _onSetupBudgetButton() {
+    setupBudget();
+  }
+
+  /// Event called when the special budget button was clicked.
+  void _onSpecialBudgetButton() {
+    setupSpecials();
+  }
+
+  /// Event called when the budget change button was clicked.
+  void _onChangeBudgetButton() {
     setupBudget();
   }
 }
