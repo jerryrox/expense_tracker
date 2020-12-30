@@ -43,7 +43,7 @@ class SpecialBudgetCell extends StatelessWidget {
             ),
           ),
           Text(
-            "Ends ${DateFormatter.yyyymmdd(specialBudget.range.max.toLocal())}",
+            "Ends ${DateFormatter.yyyymmdd(specialBudget.range.max.toLocal().subtract(Duration(days: 1)))}",
             style: TextStyle(
               fontSize: 13,
               color: theme.disabledColor,

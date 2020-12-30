@@ -16,6 +16,7 @@ import 'package:expense_tracker/ui/components/primitives/SectionText.dart';
 import 'package:expense_tracker/ui/components/primitives/SpecialBudgetCell.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:expense_tracker/ui/navigations/popups/SelectionDialogPopup.dart';
+import 'package:expense_tracker/ui/navigations/popups/SpecialBudgetPopup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -66,7 +67,7 @@ class _SpecialBudgetsPageState extends State<SpecialBudgetsPage> with UtilMixin,
       final selection = await showDialogDefault<String>(
           context,
           SelectionDialogPopup(
-            message: "",
+            message: "Choose an action for this budget.",
             selections: [
               deleteAction,
               "Cancel"
@@ -84,8 +85,7 @@ class _SpecialBudgetsPageState extends State<SpecialBudgetsPage> with UtilMixin,
   /// Starts a new process for special budget creation for user.
   Future createNewBudget() async {
     try {
-      // TODO: Show a new popup for budget creation
-      SpecialBudget newBudget;
+      final newBudget = await showDialogDefault<SpecialBudget>(context, SpecialBudgetPopup());
       if(newBudget != null) {
         loadSpecialBudget();
       }

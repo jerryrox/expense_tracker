@@ -7,8 +7,6 @@ import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/static/MathUtils.dart';
 import 'package:expense_tracker/ui/components/primitives/ColorButton.dart';
-import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
-import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/navigations/popups/ColorPickerPopup.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -6,6 +6,7 @@ import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/DefaultBudget.dart';
 import 'package:expense_tracker/modules/models/static/InputValidator.dart';
+import 'package:expense_tracker/ui/components/primitives/MoneyTextField.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -98,9 +99,8 @@ class _BudgetSetupPopupState extends State<BudgetSetupPopup> with SnackbarMixin,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 5),
-          TextField(
+          MoneyTextField(
             controller: inputController,
-            inputFormatters: [InputValidator.numberFormatter],
             onChanged: _onBudgetChanged,
           ),
           SizedBox(height: 20),
