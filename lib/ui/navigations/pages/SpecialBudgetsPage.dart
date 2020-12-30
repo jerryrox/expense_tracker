@@ -86,11 +86,10 @@ class _SpecialBudgetsPageState extends State<SpecialBudgetsPage> with UtilMixin,
   Future createNewBudget() async {
     try {
       final newBudget = await showDialogDefault<SpecialBudget>(context, SpecialBudgetPopup());
-      if(newBudget != null) {
+      if (newBudget != null) {
         loadSpecialBudget();
       }
-    }
-    catch(e) {
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
   }
@@ -115,7 +114,10 @@ class _SpecialBudgetsPageState extends State<SpecialBudgetsPage> with UtilMixin,
                 Expanded(
                   child: ListView.separated(
                     itemBuilder: (context, index) {
-                      return SpecialBudgetCell(specialBudget: upcomingBudgets[index], onClick: () => _onBudgetCellButton(upcomingBudgets[index]));
+                      return SpecialBudgetCell(
+                        specialBudget: upcomingBudgets[index],
+                        onClick: () => _onBudgetCellButton(upcomingBudgets[index]),
+                      );
                     },
                     separatorBuilder: (context, index) => LinedDivider(),
                     itemCount: upcomingBudgets.length,

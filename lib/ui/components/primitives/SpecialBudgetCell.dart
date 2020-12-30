@@ -17,6 +17,7 @@ class SpecialBudgetCell extends StatelessWidget {
     final theme = Theme.of(context);
 
     return ListTile(
+      onTap: onClick,
       title: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
