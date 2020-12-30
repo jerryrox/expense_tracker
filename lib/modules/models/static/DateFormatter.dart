@@ -6,4 +6,9 @@ class DateFormatter {
   static String yyyymmddHHMM(DateTime dateTime) {
     return "${dateTime.year}-${dateTime.month}-${dateTime.day} ${dateTime.hour}:${dateTime.minute}";
   }
+
+  /// Example: 2020-05-12
+  static String yyyymmdd(DateTime dateTime) {
+    return "${dateTime.year}-${dateTime.month}-${dateTime.day}";
+  }
 }

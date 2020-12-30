@@ -1,12 +1,14 @@
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
+import 'package:expense_tracker/modules/models/SpecialBudget.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordCategoryPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordGroupDetailPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordTagPage.dart';
+import 'package:expense_tracker/ui/navigations/pages/SpecialBudgetsPage.dart';
 import 'package:expense_tracker/ui/navigations/screens/BudgetScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/HomeScreen.dart';
 import 'package:expense_tracker/ui/navigations/screens/SettingsScreen.dart';
@@ -60,6 +62,11 @@ class AppNavigation {
     return _navPageGeneric(context, (context) => RecordGroupDetailPage(recordGroup: recordGroup));
   }
 
+  /// Shows the special budgets page.
+  Future<List<SpecialBudget>> toSpecialBudgetsPage(BuildContext context) {
+    return _navPageGeneric<List<SpecialBudget>>(context, (context) => SpecialBudgetsPage());
+  }
+
   /// Shows the next screen with generic behavior using the specified builder.
   _navScreenGeneric(BuildContext context, WidgetBuilder builder) {
     return Navigator.of(context).pushAndRemoveUntil(
@@ -69,8 +76,8 @@ class AppNavigation {
   }
 
   /// Shows the next page with generic behavior using the specified builder.
-  _navPageGeneric(BuildContext context, WidgetBuilder builder) {
-    return Navigator.of(context).push(
+  Future<T> _navPageGeneric<T>(BuildContext context, WidgetBuilder builder) {
+    return Navigator.of(context).push<T>(
       MaterialPageRoute(builder: builder),
     );
   }
