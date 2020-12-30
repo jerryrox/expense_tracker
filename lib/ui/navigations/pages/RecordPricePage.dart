@@ -9,6 +9,7 @@ import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.da
 import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
 import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
+import 'package:expense_tracker/ui/components/primitives/MoneyTextField.dart';
 import 'package:expense_tracker/ui/components/primitives/PageTopMargin.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:flutter/material.dart';
@@ -81,13 +82,8 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
               children: [
                 PageTopMargin(),
                 Text("Enter the price of the item."),
-                TextField(
+                MoneyTextField(
                   onChanged: _onPriceChanged,
-                  inputFormatters: [InputValidator.numberFormatter],
-                  keyboardType: TextInputType.numberWithOptions(
-                    decimal: true,
-                    signed: false,
-                  ),
                 ),
                 Expanded(child: Container()),
                 BottomContentPadding(

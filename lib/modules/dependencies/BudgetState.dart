@@ -12,16 +12,18 @@ class BudgetState {
   bool get isBudgetSetup => defaultBudget.totalBudget > 0;
 
   /// Loads budget data from server while syncing the state.
-  Future loadBudget(String uid) async {
+  Future<DefaultBudget> loadBudget(String uid) async {
     final api = GetDefaultBudgetApi(uid);
     final budget = await api.request();
     defaultBudget = budget;
+    return budget;
   }
 
   /// Loads the list of special budgets from server while syncing the state.
-  Future loadSpecialBudgets(String uid) async {
+  Future<List<SpecialBudget>> loadSpecialBudgets(String uid) async {
     final api = GetSpecialBudgetsApi(uid).fromThisYear();
     final budgets = await api.request();
     specialBudgets = budgets;
+    return budgets;
   }
 }

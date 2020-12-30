@@ -1,4 +1,5 @@
 import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
+import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
 import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/DialogMixin.dart';
@@ -18,9 +19,11 @@ import 'package:expense_tracker/ui/components/primitives/ContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ExpenseChart.dart';
 import 'package:expense_tracker/ui/components/primitives/FilledBox.dart';
 import 'package:expense_tracker/ui/components/primitives/NavMenuBar.dart';
+import 'package:expense_tracker/ui/components/primitives/SectionText.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/navigations/popups/BudgetSetupPopup.dart';
+import 'package:expense_tracker/ui/navigations/pages/SpecialBudgetsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,6 +40,7 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
   Map<DateRangeType, double> totalBudgets = {};
   Map<DateRangeType, double> totalSpends = {};
 
+  AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
   BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
 
@@ -84,14 +88,9 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
   /// Starts a new special budget set up process for the user.
   Future setupSpecials() async {
     try {
-      // TODO: Show dialog for special budgets
-      List<SpecialBudget> budgets;
-      if(budgets != null) {
-        setState(() => budgetState.specialBudgets = budgets);
-        _cacheTotalBudgetAndSpends();
-      }
-    }
-    catch(e) {
+      await appNavigation.toSpecialBudgetsPage(context);
+      loadBudgetData();
+    } catch (e) {
       showSnackbar(context, e.toString());
     }
   }
@@ -174,12 +173,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
+        SectionText(
           "Weekly budget (\$${totalBudgets[DateRangeType.week].toStringAsFixed(2)})",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
@@ -189,12 +184,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
           ),
         ),
         SizedBox(height: 30),
-        Text(
+        SectionText(
           "Monthly budget (\$${totalBudgets[DateRangeType.month].toStringAsFixed(2)})",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
@@ -204,12 +195,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
           ),
         ),
         SizedBox(height: 30),
-        Text(
+        SectionText(
           "Yearly budget (\$${totalBudgets[DateRangeType.year].toStringAsFixed(2)})",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 17,
-          ),
         ),
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
