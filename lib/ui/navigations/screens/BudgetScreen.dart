@@ -88,11 +88,8 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
   /// Starts a new special budget set up process for the user.
   Future setupSpecials() async {
     try {
-      final budgets = await appNavigation.toSpecialBudgetsPage(context);
-      if (budgets != null) {
-        setState(() => budgetState.specialBudgets = budgets);
-        _cacheTotalBudgetAndSpends();
-      }
+      await appNavigation.toSpecialBudgetsPage(context);
+      loadBudgetData();
     } catch (e) {
       showSnackbar(context, e.toString());
     }

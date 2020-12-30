@@ -1,7 +1,6 @@
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
-import 'package:expense_tracker/modules/models/SpecialBudget.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordCategoryPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordGroupDetailPage.dart';
@@ -63,8 +62,8 @@ class AppNavigation {
   }
 
   /// Shows the special budgets page.
-  Future<List<SpecialBudget>> toSpecialBudgetsPage(BuildContext context) {
-    return _navPageGeneric<List<SpecialBudget>>(context, (context) => SpecialBudgetsPage());
+  toSpecialBudgetsPage(BuildContext context) {
+    return _navPageGeneric(context, (context) => SpecialBudgetsPage());
   }
 
   /// Shows the next screen with generic behavior using the specified builder.
@@ -76,8 +75,8 @@ class AppNavigation {
   }
 
   /// Shows the next page with generic behavior using the specified builder.
-  Future<T> _navPageGeneric<T>(BuildContext context, WidgetBuilder builder) {
-    return Navigator.of(context).push<T>(
+  _navPageGeneric(BuildContext context, WidgetBuilder builder) {
+    return Navigator.of(context).push(
       MaterialPageRoute(builder: builder),
     );
   }
