@@ -3,6 +3,7 @@ import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
 import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
+import 'package:expense_tracker/modules/dependencies/Prefs.dart';
 import 'package:expense_tracker/modules/dependencies/UserState.dart';
 import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
@@ -43,6 +44,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
   DateRangeType dateRangeType = DateRangeType.day;
   List<RecordGroup> recordGroups = [];
 
+  Prefs get prefs => Provider.of<Prefs>(context, listen: false);
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
   BudgetState get budgetState => Provider.of<BudgetState>(context, listen: false);
@@ -52,6 +54,8 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
     super.initState();
 
     afterFrameRender(() {
+      dateRangeType = prefs.lastDateRangeType;
+
       loadData();
       loadBudget();
     });
@@ -95,6 +99,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
   /// Sets the specified date range for data displayal.
   void setDateRange(DateRangeType type) {
     setState(() => dateRangeType = type);
+    prefs.lastDateRangeType = type;
     loadData();
   }
 
