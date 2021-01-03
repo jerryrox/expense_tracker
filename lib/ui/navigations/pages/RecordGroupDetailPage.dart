@@ -6,7 +6,6 @@ import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
-import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
@@ -50,7 +49,7 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
 
     afterFrameRender(() async {
       await loadTags();
-      extractRecords();
+      cacheRecords();
     });
   }
 
@@ -98,14 +97,9 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
     loader.remove();
   }
 
-  /// Extracts all records from the record group.
-  void extractRecords() {
-    List<Record> newRecords = [];
-    for (final recordList in widget.recordGroup.itemDictionary.values) {
-      newRecords.addAll(recordList);
-    }
-
-    setState(() => this.records = newRecords);
+  /// Caches the list of records from the group into state.
+  void cacheRecords() {
+    setState(() => this.records = [...widget.recordGroup.records]);
   }
 
   @override
@@ -127,10 +121,9 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       final record = records[index];
-                      final item = _getItemById(record.itemId);
                       final tags = _getTagsByIds(record.tagIds);
                       return RecordCell(
-                        item: item,
+                        category: category,
                         record: record,
                         tags: tags,
                         onClick: () => _onRecordButton(record),
@@ -146,12 +139,6 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
         ),
       ),
     );
-  }
-
-  /// Returns the item matching the specified id.
-  Item _getItemById(String id) {
-    final keys = widget.recordGroup.itemDictionary.keys;
-    return keys.firstWhere((element) => element.id == id);
   }
 
   /// Returns the list of tags matching the specified ids.

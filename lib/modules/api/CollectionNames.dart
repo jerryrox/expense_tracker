@@ -5,7 +5,6 @@ class CollectionNames {
   static final String users = "users";
   static final String categories = "categories";
   static final String tags = "tags";
-  static final String items = "items";
   static final String records = "records";
   static final String specialBudgets = "specialBudgets";
 
@@ -24,11 +23,6 @@ class CollectionNames {
   /// Returns the path of a collection or document for a user's tag.
   static String getTagPath(String uid, {String id}) {
     return PathUtils.combineSegments([getUserPath(uid: uid), tags, id], leadSlash: false);
-  }
-
-  /// Returns the path of a collection or document for a user's item.
-  static String getItemPath(String uid, {String id}) {
-    return PathUtils.combineSegments([getUserPath(uid: uid), items, id], leadSlash: false);
   }
 
   /// Returns the path of a collection or document for a user's record.
