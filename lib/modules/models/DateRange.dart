@@ -30,12 +30,12 @@ class DateRange {
     switch(type) {
       case DateRangeType.day:
         _min = DateTime.utc(date.year, date.month, date.day);
-        _max = DateTime.utc(date.year, date.month, date.day + 1);
+        _max = DateTime.utc(date.year, date.month, date.day).add(Duration(days: 1));
         break;
 
       case DateRangeType.week:
-        _min = DateTime.utc(date.year, date.month, date.day + 1 - date.weekday);
-        _max = DateTime.utc(date.year, date.month, date.day + 8 - date.weekday);
+        _min = DateTime.utc(date.year, date.month, date.day).subtract(Duration(days: date.weekday - 1));
+        _max = DateTime.utc(date.year, date.month, date.day).add(Duration(days: 8 - date.weekday));
         break;
 
       case DateRangeType.month:

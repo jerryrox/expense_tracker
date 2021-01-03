@@ -93,7 +93,7 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Navigates to the tags selection page.
   void navigateToTags(Category category) {
-    appNavigation.toRecordItemPage(context, category);
+    appNavigation.toRecordTagPage(context, category);
   }
 
   @override

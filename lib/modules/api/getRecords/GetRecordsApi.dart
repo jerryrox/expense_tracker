@@ -7,15 +7,15 @@ import 'package:expense_tracker/modules/models/static/DynamicUtils.dart';
 class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
 
   String uid;
-  String itemId;
+  String categoryId;
   DateTime before;
   DateTime after;
 
   GetRecordsApi(this.uid);
 
-  /// Applies a filter to retrieve results matching the specified item id.
-  GetRecordsApi forItem(String itemId) {
-    this.itemId = itemId;
+  /// Applies a filter to retrieve results matching the specified category id.
+  GetRecordsApi forCategory(String categoryId) {
+    this.categoryId = categoryId;
     return this;
   }
 
@@ -33,8 +33,8 @@ class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
 
   Future<List<Record>> request() async {
     Query query = firestore.collection(CollectionNames.getRecordPath(uid));
-    if(itemId != null) {
-      query = query.where("itemId", isEqualTo: itemId);
+    if(categoryId != null) {
+      query = query.where("categoryId", isEqualTo: categoryId);
     }
     if(before != null) {
       query = query.where("date", isLessThanOrEqualTo: Timestamp.fromDate(before));
@@ -49,7 +49,7 @@ class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
       return Record(
         id: e.id,
         date: (data["date"] as Timestamp).toDate(),
-        itemId: data["itemId"] as String,
+        categoryId: data["categoryId"] as String,
         price: DynamicUtils.getDouble(data["price"]),
         tagIds: List.from(data["tagIds"] as Iterable<dynamic>),
       );

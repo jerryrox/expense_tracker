@@ -7,7 +7,6 @@ import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/DefaultBudget.dart';
-import 'package:expense_tracker/modules/models/SpecialBudget.dart';
 import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
 import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
@@ -23,7 +22,6 @@ import 'package:expense_tracker/ui/components/primitives/SectionText.dart';
 import 'package:expense_tracker/ui/components/primitives/TextRoundedButton.dart';
 import 'package:expense_tracker/ui/components/primitives/TitleText.dart';
 import 'package:expense_tracker/ui/navigations/popups/BudgetSetupPopup.dart';
-import 'package:expense_tracker/ui/navigations/pages/SpecialBudgetsPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

@@ -1,5 +1,4 @@
 import 'package:expense_tracker/modules/api/getCategories/GetCategoriesApi.dart';
-import 'package:expense_tracker/modules/api/getItems/GetItemsApi.dart';
 import 'package:expense_tracker/modules/api/getRecords/GetRecordsApi.dart';
 import 'package:expense_tracker/modules/dependencies/AppNavigation.dart';
 import 'package:expense_tracker/modules/dependencies/BudgetState.dart';
@@ -11,7 +10,6 @@ import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
 import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
-import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
 import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
@@ -67,10 +65,9 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
 
     try {
       final categories = await _retrieveCategories();
-      final items = await _retrieveItems();
       final records = await _retrieveRecords();
       setState(() {
-        this.recordGroups = RecordGroupMaker.make(categories, items, records);
+        this.recordGroups = RecordGroupMaker.make(categories, records);
       });
     } catch (e) {
       showSnackbar(context, e.toString());
@@ -103,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
     loadData();
   }
 
-  /// Shows the record page to start recording a new item.
+  /// Shows the record page to start recording a new record.
   Future showRecordPage() async {
     await appNavigation.toRecordCategoryPage(context);
     loadData();
@@ -226,11 +223,6 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
   /// Returns a future which loads all categories in the db.
   Future<List<Category>> _retrieveCategories() {
     return GetCategoriesApi(userState.uid).request();
-  }
-
-  /// Returns a future which loads all items in the db.
-  Future<List<Item>> _retrieveItems() {
-    return GetItemsApi(userState.uid).request();
   }
 
   /// Returns a future which loads all records matching the current state from the db.

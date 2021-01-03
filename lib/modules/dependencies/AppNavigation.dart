@@ -1,10 +1,8 @@
 import 'package:expense_tracker/modules/models/Category.dart';
-import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/RecordGroup.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordCategoryPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordGroupDetailPage.dart';
-import 'package:expense_tracker/ui/navigations/pages/RecordItemPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordPricePage.dart';
 import 'package:expense_tracker/ui/navigations/pages/RecordTagPage.dart';
 import 'package:expense_tracker/ui/navigations/pages/SpecialBudgetsPage.dart';
@@ -41,19 +39,14 @@ class AppNavigation {
     return _navPageGeneric(context, (context) => RecordCategoryPage());
   }
 
-  /// Shows the recording process's item selection page.
-  toRecordItemPage(BuildContext context, Category category) {
-    return _navPageGeneric(context, (context) => RecordItemPage(category: category));
-  }
-
   /// Shows the recording process's tag selection page.
-  toRecordTagPage(BuildContext context, Category category, Item item) {
-    return _navPageGeneric(context, (context) => RecordTagPage(category: category, item: item));
+  toRecordTagPage(BuildContext context, Category category) {
+    return _navPageGeneric(context, (context) => RecordTagPage(category: category));
   }
 
   /// Shows the recording process's price submission page.
-  toRecordPricePage(BuildContext context, Item item, List<Tag> tags) {
-    return _navPageGeneric(context, (context) => RecordPricePage(item: item, tags: tags));
+  toRecordPricePage(BuildContext context, Category category, List<Tag> tags) {
+    return _navPageGeneric(context, (context) => RecordPricePage(category: category, tags: tags));
   }
 
   /// Shows the detail page for the specified record group.

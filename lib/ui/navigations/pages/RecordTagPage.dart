@@ -6,7 +6,6 @@ import 'package:expense_tracker/modules/mixins/LoaderMixin.dart';
 import 'package:expense_tracker/modules/mixins/SnackbarMixin.dart';
 import 'package:expense_tracker/modules/mixins/UtilMixin.dart';
 import 'package:expense_tracker/modules/models/Category.dart';
-import 'package:expense_tracker/modules/models/Item.dart';
 import 'package:expense_tracker/modules/models/Tag.dart';
 import 'package:expense_tracker/ui/components/primitives/BottomContentPadding.dart';
 import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
@@ -20,12 +19,10 @@ import 'package:provider/provider.dart';
 
 class RecordTagPage extends StatefulWidget {
   final Category category;
-  final Item item;
 
   RecordTagPage({
     Key key,
     this.category,
-    this.item,
   }) : super(key: key);
 
   @override
@@ -44,9 +41,6 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Returns the current category in context.
   Category get category => widget.category;
-
-  /// Returns the current item in context.
-  Item get item => widget.item;
 
   @override
   void initState() {
@@ -95,9 +89,9 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
     loader.remove();
   }
 
-  /// Navigates to the item selection page.
-  void navigateToItems() {
-    appNavigation.toRecordPricePage(context, item, [
+  /// Navigates to the price recording page
+  void navigateToPrice() {
+    appNavigation.toRecordPricePage(context, category, [
       ...selectedTags
     ]);
   }
@@ -229,6 +223,6 @@ class _RecordTagPageState extends State<RecordTagPage> with UtilMixin, SnackbarM
 
   /// Event called when the "next" button was clicked
   void _onNextButton() {
-    navigateToItems();
+    navigateToPrice();
   }
 }
