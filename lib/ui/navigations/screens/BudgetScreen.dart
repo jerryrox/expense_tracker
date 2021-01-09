@@ -11,6 +11,7 @@ import 'package:expense_tracker/modules/models/static/BudgetCalculator.dart';
 import 'package:expense_tracker/modules/models/DateRange.dart';
 import 'package:expense_tracker/modules/models/ExpenseChartData.dart';
 import 'package:expense_tracker/modules/models/Record.dart';
+import 'package:expense_tracker/modules/models/static/ColorUtils.dart';
 import 'package:expense_tracker/modules/types/DateRangeType.dart';
 import 'package:expense_tracker/modules/types/NavMenuScreenType.dart';
 import 'package:expense_tracker/ui/components/primitives/ButtonWidthConstraint.dart';
@@ -34,9 +35,6 @@ class BudgetScreen extends StatefulWidget {
 
 class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMixin, LoaderMixin, DialogMixin {
   List<Record> records = [];
-  bool isDataCached = false;
-  Map<DateRangeType, double> totalBudgets = {};
-  Map<DateRangeType, double> totalSpends = {};
 
   AppNavigation get appNavigation => Provider.of<AppNavigation>(context, listen: false);
   UserState get userState => Provider.of<UserState>(context, listen: false);
@@ -61,7 +59,6 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
         budgetState.loadSpecialBudgets(userState.uid),
         _loadRecords(),
       ]);
-      _cacheTotalBudgetAndSpends();
       setState(() {});
     } catch (e) {
       showSnackbar(context, e.toString());
@@ -76,7 +73,6 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
       final newBudget = await showDialogDefault<DefaultBudget>(context, BudgetSetupPopup());
       if (newBudget != null) {
         setState(() => budgetState.defaultBudget = newBudget);
-        _cacheTotalBudgetAndSpends();
       }
     } catch (e) {
       showSnackbar(context, e.toString());
@@ -93,23 +89,44 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
     }
   }
 
-  /// Returns the chart data for the specified range type.
-  List<ExpenseChartData> getChartData(DateRangeType rangeType) {
-    double totalSpent = totalSpends[rangeType];
-    double totalBudget = totalBudgets[rangeType];
+  /// Returns the chart data using the specified data..
+  List<ExpenseChartData> getChartData(double totalSpent, double totalBudget, double budgetToDate) {
     List<ExpenseChartData> chartData = [];
+    double overspent = 0;
+    double saved = 0;
+    if(totalSpent > budgetToDate) {
+      overspent = totalSpent - budgetToDate;
+    }
+    else {
+      saved = budgetToDate - totalSpent;
+    }
+
     if (totalSpent > 0) {
       chartData.add(ExpenseChartData(
         label: "Used",
         color: Theme.of(context).errorColor,
-        value: totalSpent,
+        value: totalSpent - overspent,
       ));
     }
-    if (totalSpent < totalBudget) {
+    if(overspent > 0) {
+      chartData.add(ExpenseChartData(
+        label: "Overused",
+        color: ColorUtils.darken(Theme.of(context).errorColor, 0.25),
+        value: overspent,
+      ));
+    }
+    if(saved > 0) {
+      chartData.add(ExpenseChartData(
+        label: "Saved",
+        color: ColorUtils.brighten(Theme.of(context).primaryColor, 0.25),
+        value: saved,
+      ));
+    }
+    if (totalSpent < totalBudget && totalBudget > budgetToDate) {
       chartData.add(ExpenseChartData(
         label: "Remaining",
         color: Theme.of(context).primaryColor,
-        value: totalBudget - totalSpent,
+        value: totalBudget - totalSpent - overspent - saved,
       ));
     }
     return chartData;
@@ -163,8 +180,26 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
 
   /// Draws the content for when the user has a budget set up.
   Widget _drawBudgetContent() {
-    if (!isDataCached) {
-      return Container();
+    Map<DateRangeType, double> totalSpends = {};
+    Map<DateRangeType, double> totalBudgets = {};
+    Map<DateRangeType, double> budgetsToDate = {};
+    final now = DateTime.now().toUtc();
+    for (final type in DateRangeType.values) {
+      final dateRange = DateRange.withDateRange(now, type);
+
+      totalSpends[type] = _getTotalSpent(
+        records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
+      );
+      totalBudgets[type] = BudgetCalculator.getTotalBudget(
+        budgetState.defaultBudget,
+        budgetState.specialBudgets,
+        dateRange,
+      );
+      budgetsToDate[type] = BudgetCalculator.getTotalBudget(
+        budgetState.defaultBudget,
+        budgetState.specialBudgets,
+        DateRange.withMinMax(dateRange.min, now.add(Duration(days: 1))),
+      );
     }
 
     return Column(
@@ -177,7 +212,11 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: ExpenseChart(
-            data: getChartData(DateRangeType.week),
+            data: getChartData(
+              totalSpends[DateRangeType.week],
+              totalBudgets[DateRangeType.week],
+              budgetsToDate[DateRangeType.week],
+            ),
             showLegends: true,
           ),
         ),
@@ -188,7 +227,11 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: ExpenseChart(
-            data: getChartData(DateRangeType.month),
+            data: getChartData(
+              totalSpends[DateRangeType.month],
+              totalBudgets[DateRangeType.month],
+              budgetsToDate[DateRangeType.month],
+            ),
             showLegends: true,
           ),
         ),
@@ -199,7 +242,11 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: 400),
           child: ExpenseChart(
-            data: getChartData(DateRangeType.year),
+            data: getChartData(
+              totalSpends[DateRangeType.year],
+              totalBudgets[DateRangeType.year],
+              budgetsToDate[DateRangeType.year],
+            ),
             showLegends: true,
           ),
         ),
@@ -241,24 +288,6 @@ class _BudgetScreenState extends State<BudgetScreen> with UtilMixin, SnackbarMix
       amount += record.price;
     }
     return amount;
-  }
-
-  /// Calculates the total budget and spends for each date range type.
-  void _cacheTotalBudgetAndSpends() {
-    if (budgetState.isBudgetSetup) {
-      for (final type in DateRangeType.values) {
-        final dateRange = DateRange.withDateRange(DateTime.now().toUtc(), type);
-        totalSpends[type] = _getTotalSpent(
-          records.where((element) => !element.date.isBefore(dateRange.min)).toList(),
-        );
-        totalBudgets[type] = BudgetCalculator.getTotalBudget(
-          budgetState.defaultBudget,
-          budgetState.specialBudgets,
-          dateRange,
-        );
-      }
-      setState(() => isDataCached = true);
-    }
   }
 
   /// Event called when the budget setup button was clicked.
