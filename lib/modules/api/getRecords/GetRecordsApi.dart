@@ -21,18 +21,18 @@ class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
 
   /// Applies a filter to retrieve results before the specified date.
   GetRecordsApi beforeDate(DateTime date) {
-    this.before = date;
+    before = date;
     return this;
   }
 
   /// Applies a filter to retrieve results after the specified date.
   GetRecordsApi afterDate(DateTime date) {
-    this.after = date;
+    after = date;
     return this;
   }
 
   Future<List<Record>> request() async {
-    Query query = firestore.collection(CollectionNames.getRecordPath(uid));
+    var query = firestore.collection(CollectionNames.getRecordPath(uid));
     if(categoryId != null) {
       query = query.where("categoryId", isEqualTo: categoryId);
     }

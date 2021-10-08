@@ -7,12 +7,11 @@ import 'package:provider/provider.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ExpenseTrackerApp());
+  runApp(const ExpenseTrackerApp());
 }
 
 class ExpenseTrackerApp extends StatefulWidget {
-  
-  ExpenseTrackerApp({Key key}) : super(key: key);
+  const ExpenseTrackerApp({Key key}) : super(key: key);
   
   @override
   State<StatefulWidget> createState() => _ExpenseTrackerAppState();

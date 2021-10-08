@@ -31,7 +31,7 @@ class GetSpecialBudgetsApi extends BaseFirestoreApi<List<SpecialBudget>> {
 
     List<SpecialBudget> budgets = [];
     budgets.addAll(result.docs.map((e) {
-      final data = e.data();
+      dynamic data = e.data();
       return SpecialBudget(
         id: e.id,
         range: DateRange.withMinMax(

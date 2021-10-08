@@ -29,7 +29,7 @@ class GetTagsApi extends BaseFirestoreApi<List<Tag>> {
 
     final result = await query;
     return result.docs.map((e) {
-      final data = e.data();
+      dynamic data = e.data();
       return Tag(
         id: e.id,
         categoryId: data["categoryId"] as String,
