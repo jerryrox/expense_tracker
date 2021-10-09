@@ -1,9 +1,9 @@
-import 'package:expense_tracker/modules/types/DateRangeType.dart';
+import 'package:expense_tracker/modules/types/date_range_type.dart';
 import 'package:localstorage/localstorage.dart';
 
 class Prefs {
 
-  final LocalStorage storage = new LocalStorage("prefs");
+  final LocalStorage storage = LocalStorage("prefs");
 
   /// Returns the last selected date range type for the overview.
   DateRangeType get lastDateRangeType {

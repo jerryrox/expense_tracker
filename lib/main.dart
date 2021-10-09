@@ -1,5 +1,5 @@
-import 'package:expense_tracker/modules/dependencies/DependencyContainer.dart';
-import 'package:expense_tracker/ui/UIRoot.dart';
+import 'package:expense_tracker/modules/dependencies/dependency_container.dart';
+import 'package:expense_tracker/ui/ui_root.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
