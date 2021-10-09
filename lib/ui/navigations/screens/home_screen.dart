@@ -70,6 +70,7 @@ class _HomeScreenState extends State<HomeScreen> with UtilMixin, SnackbarMixin, 
         this.recordGroups = RecordGroupMaker.make(categories, records);
       });
     } catch (e) {
+      print(e);
       showSnackbar(context, e.toString());
     }
 

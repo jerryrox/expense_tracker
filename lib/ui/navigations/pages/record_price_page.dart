@@ -3,7 +3,6 @@ import 'package:expense_tracker/modules/dependencies/user_state.dart';
 import 'package:expense_tracker/modules/mixins/loader_mixin.dart';
 import 'package:expense_tracker/modules/mixins/snackbar_mixin.dart';
 import 'package:expense_tracker/modules/models/category.dart';
-import 'package:expense_tracker/modules/models/tag.dart';
 import 'package:expense_tracker/ui/components/primitives/bottom_content_padding.dart';
 import 'package:expense_tracker/ui/components/primitives/button_with_constraint.dart';
 import 'package:expense_tracker/ui/components/primitives/content_padding.dart';
@@ -16,12 +15,10 @@ import 'package:provider/provider.dart';
 
 class RecordPricePage extends StatefulWidget {
   final Category category;
-  final List<Tag> tags;
 
   RecordPricePage({
     Key key,
     this.category,
-    this.tags,
   }) : super(key: key);
 
   @override
@@ -36,9 +33,6 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
   /// Returns the category currently selected
   Category get category => widget.category;
 
-  /// Retursn the list of tags currently selected.
-  List<Tag> get tags => widget.tags;
-
   /// Creates a new record based on current state.
   Future createRecord() async {
     final loader = showLoader(context);
@@ -48,7 +42,6 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
         userState.uid,
         category.id,
         price,
-        tags.map((e) => e.id).toList(),
       );
       await api.request();
 

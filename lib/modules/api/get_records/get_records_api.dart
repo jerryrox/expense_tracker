@@ -32,7 +32,7 @@ class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
   }
 
   Future<List<Record>> request() async {
-    var query = firestore.collection(CollectionNames.getRecordPath(uid));
+    Query query = firestore.collection(CollectionNames.getRecordPath(uid));
     if(categoryId != null) {
       query = query.where("categoryId", isEqualTo: categoryId);
     }
@@ -45,13 +45,12 @@ class GetRecordsApi extends BaseFirestoreApi<List<Record>> {
 
     final result = await query.get();
     return result.docs.map((e) {
-      final data = e.data();
+      dynamic data = e.data();
       return Record(
         id: e.id,
         date: (data["date"] as Timestamp).toDate(),
         categoryId: data["categoryId"] as String,
         price: DynamicUtils.getDouble(data["price"]),
-        tagIds: List.from(data["tagIds"] as Iterable<dynamic>),
       );
     }).toList();
   }
