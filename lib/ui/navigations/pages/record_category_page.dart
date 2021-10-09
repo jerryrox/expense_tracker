@@ -91,9 +91,9 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
     setState(() => filteredCategories = filtered);
   }
 
-  /// Navigates to the tags selection page.
-  void navigateToTags(Category category) {
-    appNavigation.toRecordTagPage(context, category);
+  /// Navigates to the price entering page
+  void navigateToPrice(Category category) {
+    appNavigation.toRecordPricePage(context, category);
   }
 
   @override
@@ -159,6 +159,6 @@ class _RecordCategoryPageState extends State<RecordCategoryPage> with UtilMixin,
 
   /// Event called when one of the category cells was pressed.
   void _onCategoryButton(Category category) {
-    navigateToTags(category);
+    navigateToPrice(category);
   }
 }

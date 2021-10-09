@@ -2,11 +2,10 @@ import 'package:expense_tracker/modules/models/static/path_utils.dart';
 
 class CollectionNames {
 
-  static final String users = "users";
-  static final String categories = "categories";
-  static final String tags = "tags";
-  static final String records = "records";
-  static final String specialBudgets = "specialBudgets";
+  static const String users = "users";
+  static const String categories = "categories";
+  static const String records = "records";
+  static const String specialBudgets = "specialBudgets";
 
   CollectionNames._();
 

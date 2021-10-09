@@ -8,9 +8,8 @@ class CreateRecordApi extends BaseFirestoreApi<Record> {
   String uid;
   String categoryId;
   double price;
-  List<String> tagIds;
 
-  CreateRecordApi(this.uid, this.categoryId, this.price, this.tagIds);
+  CreateRecordApi(this.uid, this.categoryId, this.price);
 
   Future<Record> request() async {
     final doc = firestore.collection(CollectionNames.getRecordPath(uid)).doc();
@@ -19,14 +18,12 @@ class CreateRecordApi extends BaseFirestoreApi<Record> {
       date: DateTime.now().toUtc(),
       categoryId: categoryId,
       price: price,
-      tagIds: [...tagIds],
     );
 
     await doc.set({
       "date": Timestamp.fromDate(record.date),
       "categoryId": categoryId,
       "price": price,
-      "tagIds": tagIds,
     });
     return record;
   }

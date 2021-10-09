@@ -1,5 +1,4 @@
 import 'package:expense_tracker/modules/api/delete_record/delete_record_api.dart';
-import 'package:expense_tracker/modules/api/get_tags/get_tags_api.dart';
 import 'package:expense_tracker/modules/dependencies/user_state.dart';
 import 'package:expense_tracker/modules/mixins/dialog_mixin.dart';
 import 'package:expense_tracker/modules/mixins/loader_mixin.dart';
@@ -8,7 +7,6 @@ import 'package:expense_tracker/modules/mixins/util_mixin.dart';
 import 'package:expense_tracker/modules/models/category.dart';
 import 'package:expense_tracker/modules/models/record.dart';
 import 'package:expense_tracker/modules/models/record_group.dart';
-import 'package:expense_tracker/modules/models/tag.dart';
 import 'package:expense_tracker/ui/components/primitives/content_padding.dart';
 import 'package:expense_tracker/ui/components/primitives/filled_box.dart';
 import 'package:expense_tracker/ui/components/primitives/lined_divider.dart';
@@ -33,7 +31,6 @@ class RecordGroupDetailPage extends StatefulWidget {
 
 class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with UtilMixin, SnackbarMixin, LoaderMixin, DialogMixin {
   List<Record> records = [];
-  List<Tag> tags = [];
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
 
@@ -47,25 +44,9 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
   void initState() {
     super.initState();
 
-    afterFrameRender(() async {
-      await loadTags();
+    afterFrameRender(() {
       cacheRecords();
     });
-  }
-
-  /// Loads the list of tags from the server.
-  Future loadTags() async {
-    final loader = showLoader(context);
-
-    try {
-      final api = GetTagsApi(userState.uid).forCategory(category.id);
-      final tags = await api.request();
-      setState(() => this.tags = tags);
-    } catch (e) {
-      showSnackbar(context, e.toString());
-    }
-
-    loader.remove();
   }
 
   /// Starts listening to user's selection on what to do with the selected record.
@@ -121,11 +102,9 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
                   child: ListView.separated(
                     itemBuilder: (context, index) {
                       final record = records[index];
-                      final tags = _getTagsByIds(record.tagIds);
                       return RecordCell(
                         category: category,
                         record: record,
-                        tags: tags,
                         onClick: () => _onRecordButton(record),
                       );
                     },
@@ -139,11 +118,6 @@ class _RecordGroupDetailPageState extends State<RecordGroupDetailPage> with Util
         ),
       ),
     );
-  }
-
-  /// Returns the list of tags matching the specified ids.
-  List<Tag> _getTagsByIds(List<String> ids) {
-    return tags.where((element) => ids.contains(element.id)).toList();
   }
 
   /// Removes the specified record from the record group and the records list.

@@ -1,21 +1,17 @@
 import 'package:expense_tracker/modules/models/category.dart';
 import 'package:expense_tracker/modules/models/record.dart';
-import 'package:expense_tracker/modules/models/tag.dart';
 import 'package:expense_tracker/modules/models/static/date_formatter.dart';
-import 'package:expense_tracker/ui/components/primitives/tag_cell.dart';
 import 'package:flutter/material.dart';
 
 class RecordCell extends StatelessWidget {
   final Category category;
   final Record record;
-  final List<Tag> tags;
   final Function() onClick;
 
   RecordCell({
     Key key,
     this.category,
     this.record,
-    this.tags,
     this.onClick,
   }) : super(key: key);
 
@@ -59,11 +55,6 @@ class RecordCell extends StatelessWidget {
                   ],
                 ),
               ],
-            ),
-            Wrap(
-              runAlignment: WrapAlignment.start,
-              spacing: 2,
-              children: tags.map((e) => TagCell(tag: e)).toList(),
             ),
           ],
         ),

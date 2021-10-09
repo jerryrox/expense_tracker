@@ -1,10 +1,8 @@
 import 'package:expense_tracker/modules/models/category.dart';
 import 'package:expense_tracker/modules/models/record_group.dart';
-import 'package:expense_tracker/modules/models/tag.dart';
 import 'package:expense_tracker/ui/navigations/pages/record_category_page.dart';
 import 'package:expense_tracker/ui/navigations/pages/record_group_detail_page.dart';
 import 'package:expense_tracker/ui/navigations/pages/record_price_page.dart';
-import 'package:expense_tracker/ui/navigations/pages/record_tag_page.dart';
 import 'package:expense_tracker/ui/navigations/pages/special_budgets_page.dart';
 import 'package:expense_tracker/ui/navigations/screens/budget_screen.dart';
 import 'package:expense_tracker/ui/navigations/screens/home_screen.dart';
@@ -39,14 +37,9 @@ class AppNavigation {
     return _navPageGeneric(context, (context) => RecordCategoryPage());
   }
 
-  /// Shows the recording process's tag selection page.
-  toRecordTagPage(BuildContext context, Category category) {
-    return _navPageGeneric(context, (context) => RecordTagPage(category: category));
-  }
-
   /// Shows the recording process's price submission page.
-  toRecordPricePage(BuildContext context, Category category, List<Tag> tags) {
-    return _navPageGeneric(context, (context) => RecordPricePage(category: category, tags: tags));
+  toRecordPricePage(BuildContext context, Category category) {
+    return _navPageGeneric(context, (context) => RecordPricePage(category: category));
   }
 
   /// Shows the detail page for the specified record group.
