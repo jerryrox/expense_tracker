@@ -27,21 +27,33 @@ class RecordPricePage extends StatefulWidget {
 
 class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, LoaderMixin {
   double price = 0;
+  double conversionRate = 1;
+
+  TextEditingController conversionInput = TextEditingController(text: "1");
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
 
   /// Returns the category currently selected
   Category get category => widget.category;
 
+  /// Returns the final price of the record.
+  double get finalPrice => (price * conversionRate * 100).truncateToDouble() / 100;
+
   /// Creates a new record based on current state.
   Future createRecord() async {
+    final finalPrice = this.finalPrice;
+    if(finalPrice <= 0) {
+      showSnackbar(context, "Please enter a valid price and conversion rate.");
+      return;
+    }
+
     final loader = showLoader(context);
 
     try {
       final api = CreateRecordApi(
         userState.uid,
         category.id,
-        price,
+        finalPrice,
       );
       await api.request();
 
@@ -56,14 +68,20 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
   /// Sets the price of the record.
   void setPrice(String priceString) {
     double parsedPrice = double.tryParse(priceString) ?? 0;
-    setState(() => this.price = parsedPrice);
+    setState(() => price = parsedPrice);
+  }
+
+  /// Sets the rate in which the entered price is converted to the final price.
+  void setConversionRate(String value) {
+    double parsed = double.tryParse(value) ?? 0;
+    setState(() => conversionRate = parsed);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Record price"),
+        title: const Text("Record price"),
       ),
       body: SafeArea(
         child: FilledBox(
@@ -72,10 +90,23 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 PageTopMargin(),
-                Text("Enter the price of this record."),
-                MoneyTextField(
+                const Text("Enter the price of this record."),
+                NumberTextField(
                   onChanged: _onPriceChanged,
+                  decoration: const InputDecoration(
+                    labelText: "Price",
+                  ),
                 ),
+                const SizedBox(height: 8),
+                NumberTextField(
+                  controller: conversionInput,
+                  onChanged: _onConversionChanged,
+                  decoration: const InputDecoration(
+                    labelText: "Conversion rate",
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _drawFinalAmount(),
                 Expanded(child: Container()),
                 BottomContentPadding(
                   child: ButtonWidthConstraint(
@@ -93,9 +124,30 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
     );
   }
 
+  Widget _drawFinalAmount() {
+    final finalPrice = this.finalPrice;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text("Final price"),
+        Text(
+          "\$$finalPrice",
+          style: const TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
   /// Event called when the price input value has changed.
   void _onPriceChanged(String value) {
     setPrice(value);
+  }
+  
+  void _onConversionChanged(String value) {
+    setConversionRate(value);
   }
 
   /// Event called when the record button was clicked.

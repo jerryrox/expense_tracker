@@ -98,7 +98,7 @@ class _BudgetSetupPopupState extends State<BudgetSetupPopup> with SnackbarMixin,
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 5),
-          MoneyTextField(
+          NumberTextField(
             controller: inputController,
             onChanged: _onBudgetChanged,
           ),

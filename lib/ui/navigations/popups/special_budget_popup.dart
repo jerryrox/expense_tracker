@@ -131,7 +131,7 @@ class _SpecialBudgetPopupState extends State<SpecialBudgetPopup> with SnackbarMi
             SizedBox(height: 20),
             Text("How much are you planning to use in this period?"),
             SizedBox(height: 5),
-            MoneyTextField(
+            NumberTextField(
               onChanged: _onAmountInputChanged,
             ),
           ],
