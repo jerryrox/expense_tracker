@@ -1,5 +1,5 @@
-import 'package:expense_tracker/modules/dependencies/DependencyContainer.dart';
-import 'package:expense_tracker/ui/UIRoot.dart';
+import 'package:expense_tracker/modules/dependencies/dependency_container.dart';
+import 'package:expense_tracker/ui/ui_root.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,12 +7,11 @@ import 'package:provider/provider.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(ExpenseTrackerApp());
+  runApp(const ExpenseTrackerApp());
 }
 
 class ExpenseTrackerApp extends StatefulWidget {
-  
-  ExpenseTrackerApp({Key key}) : super(key: key);
+  const ExpenseTrackerApp({Key key}) : super(key: key);
   
   @override
   State<StatefulWidget> createState() => _ExpenseTrackerAppState();

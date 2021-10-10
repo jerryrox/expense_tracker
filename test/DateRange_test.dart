@@ -1,5 +1,5 @@
-import 'package:expense_tracker/modules/models/DateRange.dart';
-import 'package:expense_tracker/modules/types/DateRangeType.dart';
+import 'package:expense_tracker/modules/models/date_range.dart';
+import 'package:expense_tracker/modules/types/date_range_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
