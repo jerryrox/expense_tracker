@@ -1,7 +1,9 @@
 import 'package:expense_tracker/modules/api/create_record/create_record_api.dart';
+import 'package:expense_tracker/modules/dependencies/prefs.dart';
 import 'package:expense_tracker/modules/dependencies/user_state.dart';
 import 'package:expense_tracker/modules/mixins/loader_mixin.dart';
 import 'package:expense_tracker/modules/mixins/snackbar_mixin.dart';
+import 'package:expense_tracker/modules/mixins/util_mixin.dart';
 import 'package:expense_tracker/modules/models/category.dart';
 import 'package:expense_tracker/ui/components/primitives/bottom_content_padding.dart';
 import 'package:expense_tracker/ui/components/primitives/button_with_constraint.dart';
@@ -25,19 +27,30 @@ class RecordPricePage extends StatefulWidget {
   State<StatefulWidget> createState() => _RecordPricePageState();
 }
 
-class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, LoaderMixin {
+class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, LoaderMixin, UtilMixin {
   double price = 0;
   double conversionRate = 1;
 
   TextEditingController conversionInput = TextEditingController(text: "1");
 
   UserState get userState => Provider.of<UserState>(context, listen: false);
+  Prefs get prefs => Provider.of<Prefs>(context, listen: false);
 
   /// Returns the category currently selected
   Category get category => widget.category;
 
   /// Returns the final price of the record.
   double get finalPrice => (price * conversionRate * 100).truncateToDouble() / 100;
+
+  @override
+  void initState() {
+    super.initState();
+
+    afterFrameRender(() {
+      conversionRate = prefs.conversionRate;
+      conversionInput.text = conversionRate.toString();
+    });
+  }
 
   /// Creates a new record based on current state.
   Future createRecord() async {
@@ -50,6 +63,8 @@ class _RecordPricePageState extends State<RecordPricePage> with SnackbarMixin, L
     final loader = showLoader(context);
 
     try {
+      prefs.conversionRate = conversionRate;
+
       final api = CreateRecordApi(
         userState.uid,
         category.id,
